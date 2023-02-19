@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -25,6 +26,9 @@ import org.w3c.dom.Text
 
 private const val  CAMERA_REQUEST_CODE = 101
 
+private var scanning = true
+
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var codeScanner : CodeScanner
@@ -34,6 +38,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var scanner_view: CodeScannerView
 
     private lateinit var image_view : ImageView
+
+    private lateinit var return_button : Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -41,9 +47,24 @@ class MainActivity : AppCompatActivity() {
         tv_textView = findViewById(R.id.tv_textView)
         scanner_view = findViewById(R.id.scanner_view)
         image_view = findViewById(R.id.image_view)
+        return_button = findViewById(R.id.return_button)
+
+        return_button.visibility = View.GONE
+
 
         setupPermissions()
         codeScanner()
+
+        return_button.setOnClickListener {
+            tv_textView.visibility = View.GONE
+            image_view.visibility = View.GONE
+            return_button.visibility = View.GONE
+            scanning = true
+            codeScanner.startPreview()
+        }
+        // Set scanning to true when the activity starts
+        scanning = true
+
     }
 
 
@@ -66,7 +87,11 @@ class MainActivity : AppCompatActivity() {
                     tv_textView.text = qrData.id.toString()
                     val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
                     image_view.setImageResource(resourceId)
+                    return_button.visibility = View.VISIBLE
+                    scanning = false
+                    image_view.visibility = View.VISIBLE //
                 }
+                codeScanner.startPreview() // restart scanning
             }
 
 
@@ -84,12 +109,36 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        codeScanner.startPreview()
+        if (scanning) {
+            codeScanner.startPreview()
+        }
     }
 
     override fun onPause() {
-        codeScanner.releaseResources()
+        if (scanning) {
+            codeScanner.releaseResources()
+        }
         super.onPause()
+    }
+
+    override fun onDestroy() {
+        codeScanner.releaseResources()
+        super.onDestroy()
+    }
+
+
+
+    @Deprecated("Use the new method finishScan instead")
+    override fun onBackPressed() {
+        if (!scanning) {
+            tv_textView.visibility = View.GONE
+            image_view.visibility = View.GONE
+            return_button.visibility = View.GONE
+            scanning = true
+            codeScanner.startPreview()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     private fun setupPermissions(){
