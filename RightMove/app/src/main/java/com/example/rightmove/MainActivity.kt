@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.AutoFocusMode
@@ -83,16 +84,31 @@ class MainActivity : AppCompatActivity() {
 
             decodeCallback = DecodeCallback {
                 runOnUiThread{
-                    val qrData = Gson().fromJson(it.text, QRCodeData::class.java)
-                    tv_textView.text = qrData.id.toString()
-                    val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
-                    image_view.setImageResource(resourceId)
-                    return_button.visibility = View.VISIBLE
-                    scanning = false
-                    image_view.visibility = View.VISIBLE //
+                    try {
+                        val qrData = Gson().fromJson(it.text, QRCodeData::class.java)
+                        tv_textView.text = qrData.id.toString()
+                        val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
+                        image_view.setImageResource(resourceId)
+                        return_button.visibility = View.VISIBLE
+                        scanning = false
+                        image_view.visibility = View.VISIBLE //
+                    } catch (e: Exception) {
+                        // Show a pop-up window with an error message and a return button
+                        AlertDialog.Builder(this@MainActivity)
+                            .setTitle("Invalid QR")
+                            .setMessage("The scanned QR code is invalid.")
+                            .setPositiveButton("Return") { _, _ ->
+                                // Hide the pop-up window and restart scanning
+                                return_button.visibility = View.GONE
+                                scanning = true
+                                codeScanner.startPreview()
+                            }
+                            .show()
+                    }
                 }
                 codeScanner.startPreview() // restart scanning
             }
+
 
 
             errorCallback = ErrorCallback {
