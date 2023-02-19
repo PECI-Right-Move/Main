@@ -3,7 +3,8 @@ package com.example.rightmove
 data class QRCodeData(
     val id: String,
     val color: String,
-    val dimensions: Dimensions
+    val dimensions: Dimensions,
+    val imageName : String
 )
 
 data class Dimensions(

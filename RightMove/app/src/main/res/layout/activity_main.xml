@@ -15,7 +15,7 @@
        app:flashButtonColor="@android:color/black"
        app:maskColor="#612196F3"
        />
-    
+
     <TextView
         android:id="@+id/tv_textView"
         android:layout_width="wrap_content"
@@ -25,6 +25,11 @@
         android:layout_margin="20dp"
         android:textColor="@android:color/black"
 
+        />
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         />
 
 </RelativeLayout>

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -15,7 +16,11 @@ import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
+import com.google.gson.Gson
+
 import org.w3c.dom.Text
+
+
 
 
 private const val  CAMERA_REQUEST_CODE = 101
@@ -27,12 +32,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tv_textView : TextView
 
     private lateinit var scanner_view: CodeScannerView
+
+    private lateinit var image_view : ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         tv_textView = findViewById(R.id.tv_textView)
         scanner_view = findViewById(R.id.scanner_view)
+        image_view = findViewById(R.id.image_view)
 
         setupPermissions()
         codeScanner()
@@ -54,7 +62,10 @@ class MainActivity : AppCompatActivity() {
 
             decodeCallback = DecodeCallback {
                 runOnUiThread{
-                    tv_textView.text = it.text
+                    val qrData = Gson().fromJson(it.text, QRCodeData::class.java)
+                    tv_textView.text = qrData.id.toString()
+                    val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
+                    image_view.setImageResource(resourceId)
                 }
             }
 
