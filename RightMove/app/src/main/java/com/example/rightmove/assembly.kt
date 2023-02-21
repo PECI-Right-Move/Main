@@ -43,6 +43,8 @@ class assembly : AppCompatActivity() {
     private lateinit var piecesToCatch: List<String>
 
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,6 +53,7 @@ class assembly : AppCompatActivity() {
         tv_textView = findViewById(R.id.tv_textView)
         scanner_view = findViewById(R.id.scanner_view)
         image_view = findViewById(R.id.iv_assembly_image)
+
 
 
 
@@ -95,6 +98,13 @@ class assembly : AppCompatActivity() {
 
                         // Show the QR code information layout
                         qrInfoLayout.visibility = View.VISIBLE
+
+
+                        tv_textView.text = qrData.name.toString()
+                        val resourceId = resources.getIdentifier(qrData.name, "drawable", packageName)
+                        image_view.setImageResource(resourceId)
+                        image_view.visibility = View.VISIBLE //
+
 
                         scanning = false
                     } catch (e: Exception) {

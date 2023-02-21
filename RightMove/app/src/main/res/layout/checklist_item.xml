@@ -26,7 +26,6 @@
         android:layout_width="152dp"
         android:layout_height="155dp"
         android:layout_gravity="center_vertical"
-
-        android:src="@drawable/assemb1" />
+        />
 
 </LinearLayout>
