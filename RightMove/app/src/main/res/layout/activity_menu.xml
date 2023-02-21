@@ -33,4 +33,19 @@
         app:layout_constraintVertical_bias="0.5"
         android:onClick="openScanActivity"/>
 
+    <Button
+        android:id="@+id/assembly_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Assembly"
+        android:textColor="@color/cardview_dark_background"
+        android:background="@color/white"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo_image"
+        app:layout_constraintVertical_bias="0.5"
+        android:onClick="openAssemblyActivity"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

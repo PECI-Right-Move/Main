@@ -16,4 +16,9 @@ class Menu : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun openAssemblyActivity(view: View) {
+        val intent = Intent(this, assembly::class.java)
+        startActivity(intent)
+    }
+
 }
