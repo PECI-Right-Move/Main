@@ -7,10 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -37,23 +34,38 @@ class assembly : AppCompatActivity() {
 
     private lateinit var image_view : ImageView
 
+    private lateinit var qrInfoLayout: RelativeLayout
+
+    private lateinit var qrInfoTitle: TextView
+
+    private lateinit var qrInfoDetails: TextView
+
+    private lateinit var piecesToCatch: List<String>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_assembly)
 
         tv_textView = findViewById(R.id.tv_textView)
         scanner_view = findViewById(R.id.scanner_view)
         image_view = findViewById(R.id.iv_assembly_image)
 
+
+
+        qrInfoLayout = findViewById(R.id.qr_info_layout)
+        qrInfoTitle = findViewById(R.id.qr_info_title)
+        qrInfoDetails = findViewById(R.id.qr_info_details)
+
         setupPermissions()
-        codeScanner()
+        firstcodeScanner()
 
         // Set scanning to true when the activity starts
         scanning = true
     }
 
-    private fun codeScanner() {
+    private fun firstcodeScanner() {
         codeScanner = CodeScanner(this, scanner_view)
 
         codeScanner.apply {
@@ -77,23 +89,12 @@ class assembly : AppCompatActivity() {
                         )
                         val checkedItems = BooleanArray(pieces.size)
 
-                        val builder = AlertDialog.Builder(this@assembly)
-                        builder.setTitle("${qrData.name}")
-                        builder.setMultiChoiceItems(pieces, checkedItems) { _, which, isChecked ->
-                            // Update the checked items array
-                            checkedItems[which] = isChecked
-                        }
-                        builder.setPositiveButton("OK") { _, _ ->
-                            // Close the pop-up window and restart scanning
-                            scanning = true
-                            codeScanner.startPreview()
-                        }
-                        builder.setOnCancelListener {
-                            // Restart scanning when the user dismisses the pop-up window
-                            scanning = true
-                            codeScanner.startPreview()
-                        }
-                        builder.show()
+                        // Update the QR code information views
+                        qrInfoTitle.text = qrData.name
+                        qrInfoDetails.text = pieces.joinToString(separator = "\n")
+
+                        // Show the QR code information layout
+                        qrInfoLayout.visibility = View.VISIBLE
 
                         scanning = false
                     } catch (e: Exception) {
@@ -167,6 +168,11 @@ class assembly : AppCompatActivity() {
         if (permission != PackageManager.PERMISSION_GRANTED) {
             makeRequest()
         }
+    }
+
+    private fun setupGame(assemblyID: String, name: String, piece1: String, piece2: String, piece3: String, piece4: String) {
+        piecesToCatch = listOf(piece1, piece2, piece3, piece4)
+        // Other setup code here
     }
 
     private fun makeRequest(){

@@ -32,6 +32,7 @@ private var scanning = true
 
 class MainActivity : AppCompatActivity() {
 
+
     private lateinit var codeScanner : CodeScanner
 
     private lateinit var tv_textView : TextView
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity() {
                         return_button.visibility = View.VISIBLE
                         scanning = false
                         image_view.visibility = View.VISIBLE //
+                        tv_textView.visibility = View.GONE
                     } catch (e: Exception) {
                         // Show a pop-up window with an error message and a return button
                         AlertDialog.Builder(this@MainActivity)

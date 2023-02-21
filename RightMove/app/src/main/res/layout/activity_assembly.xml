@@ -16,6 +16,40 @@
         app:flashButtonColor="@android:color/black"
         app:maskColor="#612196F3" >
 
+        <RelativeLayout
+            android:id="@+id/qr_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/qr_info_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="40dp"
+                android:paddingTop="5dp" />
+
+            <TextView
+                android:id="@+id/qr_info_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="30dp"
+                android:orientation="horizontal"/>
+
+        </RelativeLayout>
+
+
+
     </com.budiyev.android.codescanner.CodeScannerView>
 
     <TextView
@@ -41,5 +75,6 @@
         app:layout_constraintTop_toBottomOf="@id/tv_textView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
