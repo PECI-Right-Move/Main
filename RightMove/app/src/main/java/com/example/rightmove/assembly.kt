@@ -19,6 +19,8 @@ import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.gson.Gson
+import java.sql.Time
+import java.util.concurrent.TimeUnit
 
 private const val  CAMERA_REQUEST_CODE = 101
 
@@ -80,6 +82,7 @@ class assembly : AppCompatActivity() {
             isAutoFocusEnabled = true
             isFlashEnabled = false
 
+
             decodeCallback = DecodeCallback { result ->
                 runOnUiThread {
                     try {
@@ -90,6 +93,11 @@ class assembly : AppCompatActivity() {
                             "3rd Piece: ${qrData.piece3}",
                             "4th Piece: ${qrData.piece4}"
                         )
+
+                        val piecesIds = arrayOf( "${qrData.piece1}",
+                            "${qrData.piece2}",
+                            "${qrData.piece3}",
+                            "${qrData.piece4}")
                         val checkedItems = BooleanArray(pieces.size)
 
                         // Update the QR code information views
@@ -105,6 +113,56 @@ class assembly : AppCompatActivity() {
                         image_view.setImageResource(resourceId)
                         image_view.visibility = View.VISIBLE //
 
+
+
+                        codeScanner.decodeCallback = DecodeCallback { result ->
+                            runOnUiThread {
+                                try {
+                                    val qrData = Gson().fromJson(result.text, QRCodeData::class.java)
+                                    val secondQRId = qrData.id
+
+
+                                    for(item in piecesIds){
+                                        var scanned = false
+                                       while(scanned == false ){
+                                           if (secondQRId == item) {
+                                               // show "Piece 1 Collected" notification
+                                               Toast.makeText(this@assembly, "${item} Collected", Toast.LENGTH_SHORT).show()
+                                               scanned = true
+                                           } else {
+                                               // show "Wrong Piece" notification
+                                               Toast.makeText(this@assembly, "Wrong Piece, you collected ${secondQRId} istead of ${item} ", Toast.LENGTH_SHORT).show()
+                                           }
+
+                                       }
+
+                                    }
+
+
+                                    // update views, etc.
+                                    tv_textView.text = qrData.id.toString()
+                                    val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
+                                    image_view.setImageResource(resourceId)
+
+                                    scanning = false
+                                    image_view.visibility = View.VISIBLE
+                                    tv_textView.visibility = View.GONE
+
+                                    // Start the preview of the first scanner
+                                    codeScanner.startPreview()
+                                } catch (e: Exception) {
+                                    // Show a pop-up window with an error message and a return button
+                                    AlertDialog.Builder(this@assembly)
+                                        .setTitle("Invalid QR")
+                                        .setMessage("The scanned QR code is invalid.")
+                                        .setPositiveButton("Return") { _, _ ->
+                                            scanning = true
+                                            codeScanner.startPreview()
+                                        }
+                                        .show()
+                                }
+                            }
+                        }
 
                         scanning = false
                     } catch (e: Exception) {
