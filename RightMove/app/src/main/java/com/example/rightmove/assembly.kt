@@ -4,6 +4,8 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -112,13 +114,13 @@ class assembly : AppCompatActivity() {
                         val resourceId = resources.getIdentifier(qrData.name, "drawable", packageName)
                         image_view.setImageResource(resourceId)
                         image_view.visibility = View.VISIBLE //
+                        tv_textView.visibility = View.GONE
 
-
-
-
+                        Handler(Looper.getMainLooper()).postDelayed({
                         codeScanner.decodeCallback = DecodeCallback { result ->
-                            Thread.sleep(1000)
+
                             runOnUiThread {
+
                                 try {
                                         val qrData = Gson().fromJson(result.text, QRCodeData::class.java)
                                         val secondQRId = qrData.id
@@ -128,6 +130,7 @@ class assembly : AppCompatActivity() {
                                                // show "Piece 1 Collected" notification
                                                Toast.makeText(this@assembly, "${secondQRId} Collected", Toast.LENGTH_SHORT).show()
                                                collected.plus(secondQRId)
+
                                                if(collected.contentEquals(piecesIds)){
                                                    // Show a pop-up window with an error message and a return button
                                                    AlertDialog.Builder(this@assembly)
@@ -153,6 +156,7 @@ class assembly : AppCompatActivity() {
                                         val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
                                         image_view.setImageResource(resourceId)
 
+
                                         scanning = false
                                         image_view.visibility = View.VISIBLE
                                         tv_textView.visibility = View.GONE
@@ -174,7 +178,7 @@ class assembly : AppCompatActivity() {
                                         .show()
                                 }
                             }
-                        }
+                        }}, 5000)
 
                         scanning = false
                     } catch (e: Exception) {
