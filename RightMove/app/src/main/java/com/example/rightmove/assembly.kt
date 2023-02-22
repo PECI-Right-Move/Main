@@ -115,38 +115,50 @@ class assembly : AppCompatActivity() {
 
 
 
+
                         codeScanner.decodeCallback = DecodeCallback { result ->
+                            Thread.sleep(1000)
                             runOnUiThread {
                                 try {
-                                    val qrData = Gson().fromJson(result.text, QRCodeData::class.java)
-                                    val secondQRId = qrData.id
+                                        val qrData = Gson().fromJson(result.text, QRCodeData::class.java)
+                                        val secondQRId = qrData.id
+                                        val collected = arrayOf<String>()
 
-
-                                    for(item in piecesIds){
-                                        var scanned = false
-                                       while(scanned == false ){
-                                           if (secondQRId == item) {
+                                           if (secondQRId in piecesIds) {
                                                // show "Piece 1 Collected" notification
-                                               Toast.makeText(this@assembly, "${item} Collected", Toast.LENGTH_SHORT).show()
-                                               scanned = true
+                                               Toast.makeText(this@assembly, "${secondQRId} Collected", Toast.LENGTH_SHORT).show()
+                                               collected.plus(secondQRId)
+                                               if(collected.contentEquals(piecesIds)){
+                                                   // Show a pop-up window with an error message and a return button
+                                                   AlertDialog.Builder(this@assembly)
+                                                       .setTitle("Your Pieces were all collected!")
+                                                       .setMessage("Now you can start your assembly")
+                                                       .setPositiveButton("Colect pieces for a new Assembly") { _, _ ->
+                                                           scanning = true
+                                                           codeScanner.startPreview()
+                                                       }
+                                                       .show()
+
+                                               }
+
                                            } else {
                                                // show "Wrong Piece" notification
-                                               Toast.makeText(this@assembly, "Wrong Piece, you collected ${secondQRId} istead of ${item} ", Toast.LENGTH_SHORT).show()
+                                               Toast.makeText(this@assembly, "Wrong Piece, you collected ${secondQRId} ", Toast.LENGTH_SHORT).show()
                                            }
 
-                                       }
-
-                                    }
 
 
-                                    // update views, etc.
-                                    tv_textView.text = qrData.id.toString()
-                                    val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
-                                    image_view.setImageResource(resourceId)
+                                        // update views, etc.
+                                        tv_textView.text = qrData.id.toString()
+                                        val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
+                                        image_view.setImageResource(resourceId)
 
-                                    scanning = false
-                                    image_view.visibility = View.VISIBLE
-                                    tv_textView.visibility = View.GONE
+                                        scanning = false
+                                        image_view.visibility = View.VISIBLE
+                                        tv_textView.visibility = View.GONE
+
+
+
 
                                     // Start the preview of the first scanner
                                     codeScanner.startPreview()
