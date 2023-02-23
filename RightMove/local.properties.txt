@@ -1,0 +1,1 @@
+sdk.dir=C:\\Users\\catar\\AppData\\Local\\Android\\sdk

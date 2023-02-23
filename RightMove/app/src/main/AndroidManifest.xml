@@ -17,6 +17,9 @@
         android:theme="@style/Theme.RightMove"
         tools:targetApi="31">
         <activity
+            android:name=".assembly"
+            android:exported="false" />
+        <activity
             android:name=".Menu"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -29,8 +32,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>
