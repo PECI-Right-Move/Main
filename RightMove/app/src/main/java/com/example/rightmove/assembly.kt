@@ -44,7 +44,7 @@ class assembly : AppCompatActivity() {
 
     private lateinit var qrInfoDetails: TextView
 
-    private lateinit var piecesToCatch: List<String>
+
 
 
 
@@ -100,7 +100,10 @@ class assembly : AppCompatActivity() {
                             "${qrData.piece2}",
                             "${qrData.piece3}",
                             "${qrData.piece4}")
-                        val checkedItems = BooleanArray(pieces.size)
+
+
+                        var currentPiece = 0
+                        val collected = mutableListOf<String>()
 
                         // Update the QR code information views
                         qrInfoTitle.text = qrData.name
@@ -124,21 +127,27 @@ class assembly : AppCompatActivity() {
                                 try {
                                         val qrData = Gson().fromJson(result.text, QRCodeData::class.java)
                                         val secondQRId = qrData.id
-                                        val collected = arrayOf<String>()
 
-                                           if (secondQRId in piecesIds) {
+
+                                           if (secondQRId == piecesIds[currentPiece]) {
                                                // show "Piece 1 Collected" notification
                                                Toast.makeText(this@assembly, "${secondQRId} Collected", Toast.LENGTH_SHORT).show()
-                                               collected.plus(secondQRId)
+                                               collected.add(secondQRId)
+                                               currentPiece++
 
-                                               if(collected.contentEquals(piecesIds)){
+                                               if(currentPiece==4){
+
                                                    // Show a pop-up window with an error message and a return button
                                                    AlertDialog.Builder(this@assembly)
                                                        .setTitle("Your Pieces were all collected!")
                                                        .setMessage("Now you can start your assembly")
-                                                       .setPositiveButton("Colect pieces for a new Assembly") { _, _ ->
+                                                       .setPositiveButton("Collect pieces for a new Assembly") { _, _ ->
                                                            scanning = true
+                                                           currentPiece = 0
+                                                           collected.clear()
                                                            codeScanner.startPreview()
+                                                           firstcodeScanner()
+
                                                        }
                                                        .show()
 
@@ -254,10 +263,6 @@ class assembly : AppCompatActivity() {
         }
     }
 
-    private fun setupGame(assemblyID: String, name: String, piece1: String, piece2: String, piece3: String, piece4: String) {
-        piecesToCatch = listOf(piece1, piece2, piece3, piece4)
-        // Other setup code here
-    }
 
     private fun makeRequest(){
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA),
