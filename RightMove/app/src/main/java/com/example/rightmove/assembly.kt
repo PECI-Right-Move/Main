@@ -21,6 +21,7 @@ import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.gson.Gson
+import org.json.JSONObject
 import java.sql.Time
 import java.util.concurrent.TimeUnit
 
@@ -134,6 +135,17 @@ class assembly : AppCompatActivity() {
                                                Toast.makeText(this@assembly, "${secondQRId} Collected", Toast.LENGTH_SHORT).show()
                                                collected.add(secondQRId)
                                                currentPiece++
+
+                                               //add display image
+                                               AlertDialog.Builder(this@assembly)
+                                                   .setPositiveButton("Collect next piece!") { _, _ ->
+                                                       scanning = true
+                                                       collected.clear()
+                                                       codeScanner.startPreview()
+                                                       firstcodeScanner()
+
+                                                   }
+                                                   .show()
 
                                                if(currentPiece==4){
 
