@@ -8,16 +8,18 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.CvType;
 import org.opencv.core.MatOfDouble;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.*;
 import org.opencv.core.Mat;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.objdetect.ArucoDetector;
 import org.opencv.objdetect.DetectorParameters;
 import org.opencv.objdetect.Dictionary;
 import org.opencv.objdetect.RefineParameters;
-
+import  java.util.HashMap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,6 +31,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import android.view.ViewGroup;
 public class MainActivity extends CameraActivity implements CvCameraViewListener2 {
     private static final String TAG = "OCVSample::Activity";
@@ -123,21 +127,85 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
         Mat gray = inputFrame.gray();
         List<Mat> corners = new ArrayList<>();
         Mat ids = new Mat();
-        Dictionary dictionary = Objdetect.getPredefinedDictionary(Objdetect.DICT_ARUCO_ORIGINAL);
+        Dictionary dictionary = Objdetect.getPredefinedDictionary(Objdetect.DICT_5X5_50);
         DetectorParameters detectorParameters=new DetectorParameters();
         RefineParameters refineParameters =new RefineParameters();
         ArucoDetector arucoDetector=new ArucoDetector(dictionary,detectorParameters,refineParameters);
         arucoDetector.detectMarkers(gray,corners,ids);
 
-        // Loop through the detected markers and print their corner points
+        // Create a HashMap to store Aruco IDs and their corresponding corners
+        HashMap<Integer, List<double[]>> dictCantos = new HashMap<>();
+
+        // Loop through the detected markers and add their corner points to the HashMap
         for (int i = 0; i < ids.rows(); i++) {
             int id = (int) ids.get(i, 0)[0];
-            System.out.println("Marker " + id + " corner points:");
+            List<double[]> cornerList = new ArrayList<>();
             for (int j = 0; j < 4; j++) {
                 double[] corner = corners.get(i).get(0, j);
-                System.out.println("  (" + corner[0] + ", " + corner[1] + ")");
+                cornerList.add(corner);
             }
+            dictCantos.put(id, cornerList);
         }
+
+        // Check if the size of dictCantos is 4 and print it
+        if (dictCantos.size() == 4) {
+            //System.out.println("dictCantos:");
+
+            //for (Map.Entry<Integer, List<double[]>> entry : dictCantos.entrySet()) {
+                //int key = entry.getKey();
+               //List<double[]> value = entry.getValue();
+                //System.out.println("  Marker " + key + " corner points:");
+                //for (double[] corner : value) {
+                    //System.out.println("    (" + corner[0] + ", " + corner[1] + ")");
+               // }
+            //}
+            // Loop through the detected markers and add their corner points to the HashMap
+            for (int i = 0; i < ids.rows(); i++) {
+                int id = (int) ids.get(i, 0)[0];
+                List<double[]> cornerList = new ArrayList<>();
+                for (int j = 0; j < 4; j++) {
+                    double[] corner = corners.get(i).get(0, j);
+                    cornerList.add(corner);
+                }
+                dictCantos.put(id, cornerList);
+            }
+
+// Get the coordinates of the corners you want to print
+            double[] corner1 = dictCantos.get(1).get(2);
+            double[] corner2 = dictCantos.get(2).get(3);
+            double[] corner3 = dictCantos.get(3).get(0);
+            double[] corner4 = dictCantos.get(4).get(1);
+
+// Print the coordinates
+            System.out.println(" marker 1: (" + corner1[0] + ", " + corner1[1] + ")");
+            System.out.println("marker 2: (" + corner2[0] + ", " + corner2[1] + ")");
+            System.out.println("marker 3: (" + corner3[0] + ", " + corner3[1] + ")");
+            System.out.println(" marker 4: (" + corner4[0] + ", " + corner4[1] + ")");
+
+            // Draw a red dot at each of the four coordinates
+            Imgproc.circle(rgba, new Point(corner1[0], corner1[1]), 5, new Scalar(255, 255, 0), -1);
+            Imgproc.circle(rgba, new Point(corner2[0], corner2[1]), 5, new Scalar(255, 255, 0), -1);
+            Imgproc.circle(rgba, new Point(corner3[0], corner3[1]), 5, new Scalar(255, 255, 0), -1);
+            Imgproc.circle(rgba, new Point(corner4[0], corner4[1]), 5, new Scalar(255, 255, 0), -1);
+            Placa placa =new Placa(corner1[0], corner1[1],corner2[0], corner2[1],corner3[0], corner3[1],corner4[0], corner4[1]);
+
+
+
+
+            Pino[][] matrix = placa.getMatrix();
+            for( int i=0; i<matrix.length;i++ ){
+                for (int j =0; j<matrix[i].length;j++){
+                    Imgproc.circle(rgba, new Point(matrix[i][j].x, matrix[i][j].y), 5, new Scalar(255, 0, 0), -1);
+                }
+            }
+
+
+
+
+
+        }
+
         return rgba;
     }
+
 }
