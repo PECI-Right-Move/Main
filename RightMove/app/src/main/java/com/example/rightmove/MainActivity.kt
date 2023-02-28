@@ -3,6 +3,7 @@ package com.example.rightmove
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.renderscript.ScriptGroup.Input
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -21,8 +22,8 @@ import com.budiyev.android.codescanner.ScanMode
 import com.google.gson.Gson
 
 import org.w3c.dom.Text
-
-
+import java.io.IOException
+import java.io.InputStream
 
 
 private const val  CAMERA_REQUEST_CODE = 101
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var image_view : ImageView
 
     private lateinit var return_button : Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -50,7 +52,6 @@ class MainActivity : AppCompatActivity() {
         scanner_view = findViewById(R.id.scanner_view)
         image_view = findViewById(R.id.image_view)
         return_button = findViewById(R.id.return_button)
-
         return_button.visibility = View.GONE
 
 
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         scanning = true
 
     }
+
 
 
 

@@ -21,6 +21,8 @@ import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.gson.Gson
+import java.io.IOException
+import java.io.InputStream
 import java.sql.Time
 import java.util.concurrent.TimeUnit
 
@@ -44,7 +46,11 @@ class assembly : AppCompatActivity() {
 
     private lateinit var qrInfoDetails: TextView
 
+    private lateinit var jsonInfo : TextView
 
+    private val instructionsList = mutableListOf<Instruction>()
+
+    private lateinit var codeAssembly: String
 
 
 
@@ -59,17 +65,33 @@ class assembly : AppCompatActivity() {
         image_view = findViewById(R.id.iv_assembly_image)
 
 
-
-
         qrInfoLayout = findViewById(R.id.qr_info_layout)
         qrInfoTitle = findViewById(R.id.qr_info_title)
         qrInfoDetails = findViewById(R.id.qr_info_details)
 
+        jsonInfo = findViewById(R.id.jsonInfo)
+
+
         setupPermissions()
+        readJson()
         firstcodeScanner()
+
 
         // Set scanning to true when the activity starts
         scanning = true
+    }
+
+    private fun readJson(){
+
+        var json: String? = null
+        try{
+            val input: InputStream = assets.open("instructions.json")
+            json = input.bufferedReader().use{it.readText()}
+            instructionsList.addAll(Gson().fromJson(json, Array<Instruction>::class.java).toList())
+        } catch (e : IOException)
+        {
+
+        }
     }
 
     private fun firstcodeScanner() {
@@ -89,6 +111,7 @@ class assembly : AppCompatActivity() {
                 runOnUiThread {
                     try {
                         val qrData = Gson().fromJson(result.text, AssemblyData::class.java)
+                        codeAssembly = qrData.assemblyId
                         val pieces = arrayOf(
                             "1st Piece: ${qrData.piece1}",
                             "2nd Piece: ${qrData.piece2}",
@@ -129,11 +152,13 @@ class assembly : AppCompatActivity() {
                                         val secondQRId = qrData.id
 
 
-                                           if (secondQRId == piecesIds[currentPiece]) {
+                                    if (secondQRId == piecesIds[currentPiece]) {
                                                // show "Piece 1 Collected" notification
                                                Toast.makeText(this@assembly, "${secondQRId} Collected", Toast.LENGTH_SHORT).show()
                                                collected.add(secondQRId)
+
                                                currentPiece++
+
 
                                                if(currentPiece==4){
 
@@ -159,7 +184,6 @@ class assembly : AppCompatActivity() {
                                            }
 
 
-
                                         // update views, etc.
                                         tv_textView.text = qrData.id.toString()
                                         val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
@@ -169,6 +193,8 @@ class assembly : AppCompatActivity() {
                                         scanning = false
                                         image_view.visibility = View.VISIBLE
                                         tv_textView.visibility = View.GONE
+
+                                       // verification(secondQRId, currentPiece, codeAssembly)
 
 
 
@@ -218,7 +244,37 @@ class assembly : AppCompatActivity() {
     }
 
 
+    private fun verification(id: String, index: Int, assembly: String) {
+        val instruction = instructionsList.find { it.assembly == assembly }
+        Toast.makeText(this@assembly, "Verificated ${instruction}", Toast.LENGTH_SHORT).show()
+        instruction?.steps?.forEach { step ->
+            if (step.idPiece == id && instructionsList.indexOf(instruction) == index) {
+                val resourceId = resources.getIdentifier(step.idStep, "drawable", packageName)
+                image_view.setImageResource(resourceId)
+                image_view.visibility = View.VISIBLE
+                return@forEach
+            }
+        }
+    }
 
+
+    private fun verification1(id: String, index: Int, assembly:String){
+        for(elem in instructionsList) {
+            if(elem.assembly == assembly){
+                Toast.makeText(this@assembly, "Verificated ${elem.assembly}", Toast.LENGTH_SHORT).show()
+                for (i in elem.steps) {
+                    if (index < elem.steps.size && elem.steps[index].idPiece == id) {
+                        val resourceId = resources.getIdentifier(i.idStep, "drawable", packageName)
+                        image_view.setImageResource(resourceId)
+                        image_view.visibility = View.VISIBLE //
+                    }
+                }
+
+            }
+
+        }
+
+    }
 
 
     override fun onResume() {
