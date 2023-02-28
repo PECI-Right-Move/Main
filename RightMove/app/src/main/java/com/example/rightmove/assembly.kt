@@ -5,8 +5,11 @@ import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import java.io.IOException
+import com.google.gson.reflect.TypeToken
 import android.os.Looper
 import android.util.Log
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
@@ -131,21 +134,24 @@ class assembly : AppCompatActivity() {
 
 
                                            if (secondQRId == piecesIds[currentPiece]) {
+
                                                // show "Piece 1 Collected" notification
                                                Toast.makeText(this@assembly, "${secondQRId} Collected", Toast.LENGTH_SHORT).show()
                                                collected.add(secondQRId)
                                                currentPiece++
 
-                                               //add display image
-                                               AlertDialog.Builder(this@assembly)
-                                                   .setPositiveButton("Collect next piece!") { _, _ ->
-                                                       scanning = true
-                                                       collected.clear()
-                                                       codeScanner.startPreview()
-                                                       firstcodeScanner()
+                                               //read json////////////////////
+                                               val ler = read_json(applicationContext, "instructions.json")
+                                               Log.i("data", ler.toString())
+                                               val gson = Gson()
+                                               val listPersonType = object : TypeToken<List<Instructions>>() {}.type
 
-                                                   }
-                                                   .show()
+                                               var list: List<Instructions> = gson.fromJson(ler, listPersonType)
+                                               list.forEachIndexed { idx, list -> Log.i("data", "> Item $idx:\n$list") }
+                                               val step = resources.getIdentifier(list.toString(), "drawable", packageName)
+                                               image_view.setImageResource(step)
+                                               //miss add display image
+
 
                                                if(currentPiece==4){
 
@@ -173,8 +179,7 @@ class assembly : AppCompatActivity() {
 
 
                                         // update views, etc.
-                                        tv_textView.text = qrData.id.toString()
-                                        val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
+                                        val resourceId = resources.getIdentifier("step1", "drawable", packageName)
                                         image_view.setImageResource(resourceId)
 
 
@@ -252,6 +257,16 @@ class assembly : AppCompatActivity() {
         super.onDestroy()
     }
 
+    fun read_json (context: Context, fileName: String): String? {
+        val jsonString: String
+        try {
+            jsonString = context.assets.open("instructions.json").bufferedReader().use { it.readText() }
+        } catch (ioException: IOException) {
+            ioException.printStackTrace()
+            return null
+        }
+        return jsonString
+    }
 
 
     @Deprecated("Use the new method finishScan instead")
