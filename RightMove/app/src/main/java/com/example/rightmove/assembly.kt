@@ -125,7 +125,7 @@ class assembly : AppCompatActivity() {
                             "${qrData.piece4}")
 
 
-                        var currentPiece = 0
+                        //var currentPiece = 0
                         val collected = mutableListOf<String>()
 
                         // Update the QR code information views
@@ -142,48 +142,51 @@ class assembly : AppCompatActivity() {
                         image_view.visibility = View.VISIBLE //
                         tv_textView.visibility = View.GONE
 
+                        var currentPiece = -1
+                        // Start the preview of the second scanner
                         Handler(Looper.getMainLooper()).postDelayed({
-                        codeScanner.decodeCallback = DecodeCallback { result ->
-
-                            runOnUiThread {
-
-                                try {
-                                        val qrData = Gson().fromJson(result.text, QRCodeData::class.java)
+                            codeScanner.decodeCallback = DecodeCallback { result ->
+                                runOnUiThread {
+                                    try {
+                                        val qrData =
+                                            Gson().fromJson(result.text, QRCodeData::class.java)
                                         val secondQRId = qrData.id
 
+                                        if (secondQRId == piecesIds[currentPiece + 1]) {
+                                            // show "Piece 1 Collected" notification
+                                            Toast.makeText(
+                                                this@assembly,
+                                                "${secondQRId} Collected",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            currentPiece++
 
-                                    if (secondQRId == piecesIds[currentPiece]) {
-                                               // show "Piece 1 Collected" notification
-                                               Toast.makeText(this@assembly, "${secondQRId} Collected", Toast.LENGTH_SHORT).show()
-                                               collected.add(secondQRId)
+                                            if (currentPiece == 3) {
 
-                                               currentPiece++
+                                                // Show a pop-up window with an error message and a return button
+                                                AlertDialog.Builder(this@assembly)
+                                                    .setTitle("Your Pieces were all collected!")
+                                                    .setMessage("Now you can start your assembly")
+                                                    .setPositiveButton("Collect pieces for a new Assembly") { _, _ ->
+                                                        scanning = true
+                                                        currentPiece = -1
+                                                        codeScanner.startPreview()
+                                                        firstcodeScanner()
+                                                    }
+                                                    .show()
 
+                                            }
 
-                                               if(currentPiece==4){
+                                        } else {
+                                            // show "Wrong Piece" notification
+                                            Toast.makeText(
+                                                this@assembly,
+                                                "Wrong Piece, you collected ${secondQRId} ",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
 
-                                                   // Show a pop-up window with an error message and a return button
-                                                   AlertDialog.Builder(this@assembly)
-                                                       .setTitle("Your Pieces were all collected!")
-                                                       .setMessage("Now you can start your assembly")
-                                                       .setPositiveButton("Collect pieces for a new Assembly") { _, _ ->
-                                                           scanning = true
-                                                           currentPiece = 0
-                                                           collected.clear()
-                                                           codeScanner.startPreview()
-                                                           firstcodeScanner()
-
-                                                       }
-                                                       .show()
-
-                                               }
-
-                                           } else {
-                                               // show "Wrong Piece" notification
-                                               Toast.makeText(this@assembly, "Wrong Piece, you collected ${secondQRId} ", Toast.LENGTH_SHORT).show()
-                                           }
-
-
+                                        //AQUI
                                         // update views, etc.
                                         tv_textView.text = qrData.id.toString()
                                         val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
