@@ -53,6 +53,18 @@
                     android:scaleType="centerInside"
                     android:layout_toLeftOf="@+id/iv_assembly_image"/>
 
+                <TextView
+                    android:id="@+id/jsonInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="30dp"
+                    android:scaleType="centerInside"
+                    android:layout_toLeftOf="@+id/iv_assembly_image"/>
+
                 <ImageView
                     android:id="@+id/iv_assembly_image"
                     android:layout_width="200dp"

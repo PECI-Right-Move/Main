@@ -12,16 +12,17 @@ data class Dimensions(
     val y: Int,
     val z: Int
 )
-data class Steps(
-    val id: String,
-    val coordinates : Dimensions,
-    val color: String
+
+data class Step(
+    val idPiece: String,
+    val idStep: String,
+    val color: String,
+    val coordinates: Dimensions
 )
-data class Instructions(
-    val id: String,
-    val step1: Steps,
-    val step2: Steps,
-    val step3: Steps,
-    val step4: Steps,
-    val name: String
+
+data class Instruction(
+    val assembly: String,
+    val steps : Array<Step>,
+    val instName: String
 )
+
