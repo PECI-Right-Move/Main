@@ -10,23 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ed77ce5-bec1-4d43-969d-62d11be04ccf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/assets/instructions.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/step1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/step2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/step3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/step4.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/rightmove/assembly.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/rightmove/assembly.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_main.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[ad071603302604e9cb]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\ASUS\.android\avd\Pixel_6_API_30.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />

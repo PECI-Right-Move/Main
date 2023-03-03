@@ -247,15 +247,17 @@ class assembly : AppCompatActivity() {
     }
 
 
-    private fun verification(id: String, index: Int, assembly: String) {
+    private fun verification(id: String, index: Int, assembly: String, instname: String) {
         val instruction = instructionsList.find { it.assembly == assembly }
         Toast.makeText(this@assembly, "Verificated ${instruction}", Toast.LENGTH_SHORT).show()
         instruction?.steps?.forEach { step ->
-            if (step.idPiece == id && instructionsList.indexOf(instruction) == index) {
-                val resourceId = resources.getIdentifier(step.idStep, "drawable", packageName)
-                image_view.setImageResource(resourceId)
-                image_view.visibility = View.VISIBLE
-                return@forEach
+            if (instruction.assembly == assembly && instruction.instName == instname) {
+                if (step.idPiece == id && instructionsList.indexOf(instruction) == index) {
+                    val resourceId = resources.getIdentifier(step.idStep, "drawable", packageName)
+                    image_view.setImageResource(resourceId)
+                    image_view.visibility = View.VISIBLE
+                    return@forEach
+                }
             }
         }
     }
