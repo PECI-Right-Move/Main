@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                     try {
                         val qrData = Gson().fromJson(it.text, QRCodeData::class.java)
                         tv_textView.text = qrData.id.toString()
-                        val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
+                        val resourceId = resources.getIdentifier(qrData.name, "drawable", packageName)
                         image_view.setImageResource(resourceId)
                         return_button.visibility = View.VISIBLE
                         scanning = false
