@@ -189,7 +189,7 @@ class assembly : AppCompatActivity() {
                                         //AQUI
                                         // update views, etc.
                                         tv_textView.text = qrData.id.toString()
-                                        val resourceId = resources.getIdentifier(qrData.imageName, "drawable", packageName)
+                                        val resourceId = resources.getIdentifier(qrData.name, "drawable", packageName)
                                         image_view.setImageResource(resourceId)
 
 
@@ -197,7 +197,13 @@ class assembly : AppCompatActivity() {
                                         image_view.visibility = View.VISIBLE
                                         tv_textView.visibility = View.GONE
 
-                                       // verification(secondQRId, currentPiece, codeAssembly)
+
+
+                                       verificationFirst(
+                                           secondQRId,
+                                           currentPiece,
+                                           codeAssembly
+                                       )
 
 
 
@@ -246,37 +252,20 @@ class assembly : AppCompatActivity() {
         }
     }
 
-
-    private fun verification(id: String, index: Int, assembly: String) {
+    private fun verificationFirst(id: String, index: Int, assembly: String) {
         val instruction = instructionsList.find { it.assembly == assembly }
-        Toast.makeText(this@assembly, "Verificated ${instruction}", Toast.LENGTH_SHORT).show()
-        instruction?.steps?.forEach { step ->
-            if (step.idPiece == id && instructionsList.indexOf(instruction) == index) {
+        if (instruction != null) {
+            Toast.makeText(this@assembly, "Verificated ${instruction.assembly}", Toast.LENGTH_SHORT).show()
+        }
+        // Chamar aqui Color&Coordinates
+        instruction?.steps?.forEachIndexed { i, step ->
+            if (instruction.assembly == assembly && step.idPiece == id && i == index) {
                 val resourceId = resources.getIdentifier(step.idStep, "drawable", packageName)
                 image_view.setImageResource(resourceId)
                 image_view.visibility = View.VISIBLE
-                return@forEach
+                return
             }
         }
-    }
-
-
-    private fun verification1(id: String, index: Int, assembly:String){
-        for(elem in instructionsList) {
-            if(elem.assembly == assembly){
-                Toast.makeText(this@assembly, "Verificated ${elem.assembly}", Toast.LENGTH_SHORT).show()
-                for (i in elem.steps) {
-                    if (index < elem.steps.size && elem.steps[index].idPiece == id) {
-                        val resourceId = resources.getIdentifier(i.idStep, "drawable", packageName)
-                        image_view.setImageResource(resourceId)
-                        image_view.visibility = View.VISIBLE //
-                    }
-                }
-
-            }
-
-        }
-
     }
 
 
