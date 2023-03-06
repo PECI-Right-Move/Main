@@ -192,8 +192,8 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
 
             Pino[][] matrix = placa.getMatrix();
 
-            int pinoY = 0;
-            int pinoX = 0;
+            int pinoY = 3;
+            int pinoX = 2;
 
             double x = matrix[pinoX][pinoY].x;
             double y = matrix[pinoX][pinoY].y;

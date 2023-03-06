@@ -10,10 +10,25 @@ public class Placa {
     public  List<Pino> lista;
 
     public Placa(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-        Point point1= new Point(x1+5,y1+5);
-        Point point2= new Point(x2-5,y2+5);
-        Point point3= new Point(x3-5,y3-5);
-        Point point4= new Point(x4+5,y4-5);
+
+        double realXDistance = 25.5;
+        double realCornerDistance = 0.75;
+
+        double virtualXDisntaceBottom = x2 - x1;
+
+        double virtualXDisntaceTop= x3 -x4;
+
+        double virtualCornerBottomDistance = (realCornerDistance * virtualXDisntaceBottom) / realXDistance;
+
+        double virtualCornerTopDistance = (realCornerDistance * virtualXDisntaceTop) / realXDistance;
+
+        //Bottom
+        Point point1= new Point(x1 + virtualCornerBottomDistance,y1 + virtualCornerBottomDistance);
+        Point point2= new Point(x2 - virtualCornerBottomDistance ,y2 + virtualCornerBottomDistance );
+
+        //Top
+        Point point3= new Point(x3 - virtualCornerTopDistance,y3 - virtualCornerTopDistance);
+        Point point4= new Point(x4 + virtualCornerTopDistance ,y4 - virtualCornerTopDistance);
 
 
         lista = this.getLegoNubs(point1,point2,point3,point4);
