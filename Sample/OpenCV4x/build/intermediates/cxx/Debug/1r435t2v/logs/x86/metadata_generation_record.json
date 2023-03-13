@@ -11,11 +11,11 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": -1443199751
+    "memoizedHashCode": -1481821264
   },
   {
     "level_": 0,
-    "message_": "rebuilding JSON C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\.cxx\\Debug\\1r435t2v\\x86\\android_gradle_build.json due to:",
+    "message_": "JSON \u0027C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\.cxx\\Debug\\1r435t2v\\x86\\android_gradle_build.json\u0027 was up-to-date",
     "file_": "C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\libcxx_helper\\CMakeLists.txt",
     "tag_": "debug|x86",
     "diagnosticCode_": 0,
@@ -25,119 +25,7 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": -1902525127
-  },
-  {
-    "level_": 0,
-    "message_": "- a file changed",
-    "file_": "C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|x86",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 499085802
-  },
-  {
-    "level_": 0,
-    "message_": "  - C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\libcxx_helper\\CMakeLists.txt (LAST_MODIFIED_CHANGED)",
-    "file_": "C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|x86",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -452975856
-  },
-  {
-    "level_": 0,
-    "message_": "keeping json folder \u0027C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\.cxx\\Debug\\1r435t2v\\x86\u0027 but regenerating project",
-    "file_": "C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|x86",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 1525303757
-  },
-  {
-    "level_": 0,
-    "message_": "executing cmake @echo off\n\"C:\\\\Users\\\\LEGION\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\cmake.exe\" ^\n  \"-HC:\\\\Users\\\\LEGION\\\\Documents\\\\GitHub\\\\Main\\\\Sample\\\\OpenCV4x\\\\libcxx_helper\" ^\n  \"-DCMAKE_SYSTEM_NAME\u003dAndroid\" ^\n  \"-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\" ^\n  \"-DCMAKE_SYSTEM_VERSION\u003d24\" ^\n  \"-DANDROID_PLATFORM\u003dandroid-24\" ^\n  \"-DANDROID_ABI\u003dx86\" ^\n  \"-DCMAKE_ANDROID_ARCH_ABI\u003dx86\" ^\n  \"-DANDROID_NDK\u003dC:\\\\Users\\\\LEGION\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\" ^\n  \"-DCMAKE_ANDROID_NDK\u003dC:\\\\Users\\\\LEGION\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\" ^\n  \"-DCMAKE_TOOLCHAIN_FILE\u003dC:\\\\Users\\\\LEGION\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\\\\build\\\\cmake\\\\android.toolchain.cmake\" ^\n  \"-DCMAKE_MAKE_PROGRAM\u003dC:\\\\Users\\\\LEGION\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\ninja.exe\" ^\n  \"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\\\Users\\\\LEGION\\\\Documents\\\\GitHub\\\\Main\\\\Sample\\\\OpenCV4x\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\1r435t2v\\\\obj\\\\x86\" ^\n  \"-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dC:\\\\Users\\\\LEGION\\\\Documents\\\\GitHub\\\\Main\\\\Sample\\\\OpenCV4x\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\1r435t2v\\\\obj\\\\x86\" ^\n  \"-DCMAKE_BUILD_TYPE\u003dDebug\" ^\n  \"-BC:\\\\Users\\\\LEGION\\\\Documents\\\\GitHub\\\\Main\\\\Sample\\\\OpenCV4x\\\\.cxx\\\\Debug\\\\1r435t2v\\\\x86\" ^\n  -GNinja ^\n  \"-DANDROID_STL\u003dc++_shared\"\n",
-    "file_": "C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|x86",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -85896387
-  },
-  {
-    "level_": 0,
-    "message_": "@echo off\n\"C:\\\\Users\\\\LEGION\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\cmake.exe\" ^\n  \"-HC:\\\\Users\\\\LEGION\\\\Documents\\\\GitHub\\\\Main\\\\Sample\\\\OpenCV4x\\\\libcxx_helper\" ^\n  \"-DCMAKE_SYSTEM_NAME\u003dAndroid\" ^\n  \"-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\" ^\n  \"-DCMAKE_SYSTEM_VERSION\u003d24\" ^\n  \"-DANDROID_PLATFORM\u003dandroid-24\" ^\n  \"-DANDROID_ABI\u003dx86\" ^\n  \"-DCMAKE_ANDROID_ARCH_ABI\u003dx86\" ^\n  \"-DANDROID_NDK\u003dC:\\\\Users\\\\LEGION\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\" ^\n  \"-DCMAKE_ANDROID_NDK\u003dC:\\\\Users\\\\LEGION\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\" ^\n  \"-DCMAKE_TOOLCHAIN_FILE\u003dC:\\\\Users\\\\LEGION\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\\\\build\\\\cmake\\\\android.toolchain.cmake\" ^\n  \"-DCMAKE_MAKE_PROGRAM\u003dC:\\\\Users\\\\LEGION\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\ninja.exe\" ^\n  \"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\\\Users\\\\LEGION\\\\Documents\\\\GitHub\\\\Main\\\\Sample\\\\OpenCV4x\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\1r435t2v\\\\obj\\\\x86\" ^\n  \"-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dC:\\\\Users\\\\LEGION\\\\Documents\\\\GitHub\\\\Main\\\\Sample\\\\OpenCV4x\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\1r435t2v\\\\obj\\\\x86\" ^\n  \"-DCMAKE_BUILD_TYPE\u003dDebug\" ^\n  \"-BC:\\\\Users\\\\LEGION\\\\Documents\\\\GitHub\\\\Main\\\\Sample\\\\OpenCV4x\\\\.cxx\\\\Debug\\\\1r435t2v\\\\x86\" ^\n  -GNinja ^\n  \"-DANDROID_STL\u003dc++_shared\"\n",
-    "file_": "C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|x86",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -649148002
-  },
-  {
-    "level_": 0,
-    "message_": "Exiting generation of C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\.cxx\\Debug\\1r435t2v\\x86\\compile_commands.json.bin normally",
-    "file_": "C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|x86",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -441809047
-  },
-  {
-    "level_": 0,
-    "message_": "done executing cmake",
-    "file_": "C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|x86",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -966630263
-  },
-  {
-    "level_": 0,
-    "message_": "deleted unexpected build output C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\build\\intermediates\\cxx\\Debug\\1r435t2v\\obj\\x86\\libc++_shared.so in incremental regenerate",
-    "file_": "C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|x86",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -1629222654
+    "memoizedHashCode": -1668522137
   },
   {
     "level_": 0,
@@ -151,6 +39,6 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": 971442821
+    "memoizedHashCode": 932821308
   }
 ]

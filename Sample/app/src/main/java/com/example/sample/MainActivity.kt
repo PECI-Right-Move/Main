@@ -1,82 +1,199 @@
 package com.example.sample
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.hardware.Camera
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.renderscript.ScriptGroup.Input
 import android.util.Log
-import android.view.MenuItem
-import android.view.SurfaceView
 import android.view.View
-import android.view.WindowManager
-import org.opencv.android.*
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2
-import org.opencv.core.Mat
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.budiyev.android.codescanner.AutoFocusMode
+import com.budiyev.android.codescanner.CodeScanner
+import com.budiyev.android.codescanner.CodeScannerView
+import com.budiyev.android.codescanner.DecodeCallback
+import com.budiyev.android.codescanner.ErrorCallback
+import com.budiyev.android.codescanner.ScanMode
+import com.example.sample.QRCodeData
+import com.example.sample.R
+import com.google.gson.Gson
 
-class Tutorial1Activity : CameraActivity(), CvCameraViewListener2 {
-    private var mOpenCvCameraView: CameraBridgeViewBase? = null
-    private val mIsJavaCamera = true
-    private val mItemSwitchCamera: MenuItem? = null
-    private val mLoaderCallback: BaseLoaderCallback = object : BaseLoaderCallback(this) {
-        override fun onManagerConnected(status: Int) {
-            when (status) {
-                SUCCESS -> {
-                    Log.i(TAG, "OpenCV loaded successfully")
-                    mOpenCvCameraView!!.enableView()
+import org.w3c.dom.Text
+import java.io.IOException
+import java.io.InputStream
+
+
+private const val  CAMERA_REQUEST_CODE = 101
+
+private var scanning = true
+
+
+class MainActivity : AppCompatActivity() {
+
+
+    private lateinit var codeScanner : CodeScanner
+
+    private lateinit var tv_textView : TextView
+
+    private lateinit var scanner_view: CodeScannerView
+
+    private lateinit var image_view : ImageView
+
+    private lateinit var return_button : Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        tv_textView = findViewById(R.id.tv_textView)
+        scanner_view = findViewById(R.id.scanner_view)
+        image_view = findViewById(R.id.image_view)
+        return_button = findViewById(R.id.return_button)
+        return_button.visibility = View.GONE
+
+
+        setupPermissions()
+        codeScanner()
+
+        return_button.setOnClickListener {
+            tv_textView.visibility = View.GONE
+            image_view.visibility = View.GONE
+            return_button.visibility = View.GONE
+            scanning = true
+            codeScanner.startPreview()
+        }
+        // Set scanning to true when the activity starts
+        scanning = true
+
+    }
+
+
+
+
+    private fun codeScanner(){
+        codeScanner = CodeScanner(this,scanner_view)
+
+        codeScanner.apply {
+            camera = CodeScanner.CAMERA_BACK
+            formats = CodeScanner.ALL_FORMATS
+
+            autoFocusMode = AutoFocusMode.SAFE
+            scanMode = ScanMode.CONTINUOUS
+            isAutoFocusEnabled = true
+            isFlashEnabled = false
+
+            decodeCallback = DecodeCallback {
+                runOnUiThread{
+                    try {
+                        val qrData = Gson().fromJson(it.text, QRCodeData::class.java)
+                        tv_textView.text = qrData.id.toString()
+                        val resourceId = resources.getIdentifier(qrData.name, "drawable", packageName)
+                        image_view.setImageResource(resourceId)
+                        return_button.visibility = View.VISIBLE
+                        scanning = false
+                        image_view.visibility = View.VISIBLE //
+                        tv_textView.visibility = View.GONE
+                    } catch (e: Exception) {
+                        // Show a pop-up window with an error message and a return button
+                        AlertDialog.Builder(this@MainActivity)
+                            .setTitle("Invalid QR")
+                            .setMessage("The scanned QR code is invalid.")
+                            .setPositiveButton("Return") { _, _ ->
+                                // Hide the pop-up window and restart scanning
+                                return_button.visibility = View.GONE
+                                scanning = true
+                                codeScanner.startPreview()
+                            }
+                            .show()
+                    }
                 }
-                else -> {
-                    super.onManagerConnected(status)
+                codeScanner.startPreview() // restart scanning
+            }
+
+
+
+            errorCallback = ErrorCallback {
+                runOnUiThread {
+                    Log.e("Main", "Camera inicialization error: ${it.message}")
+                }
+            }
+        }
+
+        scanner_view.setOnClickListener {
+            codeScanner.startPreview()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (scanning) {
+            codeScanner.startPreview()
+        }
+    }
+
+    override fun onPause() {
+        if (scanning) {
+            codeScanner.releaseResources()
+        }
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        codeScanner.releaseResources()
+        super.onDestroy()
+    }
+
+
+
+    @Deprecated("Use the new method finishScan instead")
+    override fun onBackPressed() {
+        if (!scanning) {
+            tv_textView.visibility = View.GONE
+            image_view.visibility = View.GONE
+            return_button.visibility = View.GONE
+            scanning = true
+            codeScanner.startPreview()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    private fun setupPermissions(){
+        val permission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            makeRequest()
+        }
+    }
+
+    private fun makeRequest(){
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA),
+            CAMERA_REQUEST_CODE )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            CAMERA_REQUEST_CODE -> {
+                if (grantResults.isEmpty() || grantResults[0]!= PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this, "you need camera permission to use Right Move", Toast.LENGTH_SHORT)
+                }else{
+                    // Permissao garantida
+
                 }
             }
         }
     }
 
-    init {
-        Log.i(TAG, "Instantiated new " + this.javaClass)
-    }
-
-    /** Called when the activity is first created.  */
-    public override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i(TAG, "called onCreate")
-        super.onCreate(savedInstanceState)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        setContentView(R.layout.activity_main)
-        mOpenCvCameraView =
-            findViewById<View>(R.id.tutorial1_activity_java_surface_view) as CameraBridgeViewBase
-        mOpenCvCameraView!!.visibility = SurfaceView.VISIBLE
-        mOpenCvCameraView!!.setCvCameraViewListener(this)
-    }
-
-    public override fun onPause() {
-        super.onPause()
-        if (mOpenCvCameraView != null) mOpenCvCameraView!!.disableView()
-    }
-
-    public override fun onResume() {
-        super.onResume()
-        if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization")
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback)
-        } else {
-            Log.d(TAG, "OpenCV library found inside package. Using it!")
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)
-        }
-    }
-
-    /*override fun getCameraViewList(): List<CameraBridgeViewBase> {
-        return listOf<CameraBridgeViewBase>(mOpenCvCameraView)
-    }*/
-
-    public override fun onDestroy() {
-        super.onDestroy()
-        if (mOpenCvCameraView != null) mOpenCvCameraView!!.disableView()
-    }
-
-    override fun onCameraViewStarted(width: Int, height: Int) {}
-    override fun onCameraViewStopped() {}
-    override fun onCameraFrame(inputFrame: CvCameraViewFrame): Mat {
-        return inputFrame.rgba()
-    }
-
-    companion object {
-        private const val TAG = "OCVSample::Activity"
-    }
 }
