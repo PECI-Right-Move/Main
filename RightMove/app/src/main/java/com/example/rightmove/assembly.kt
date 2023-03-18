@@ -276,25 +276,53 @@ class assembly : AppCompatActivity() {
         val dimensions = json.getString("dimensions")
 
         val jsonObject = JsonObject()
-        jsonObject.addProperty("color", color)
-        jsonObject.addProperty("dimensions", dimensions)
 
         if (color == "#ff0000") {
             val idPiece = "76371" //red 1x2
             jsonObject.addProperty("idPiece", idPiece)
+
+            val idStep = "c12345"
+            jsonObject.addProperty("idStep", idStep)
+
+            jsonObject.addProperty("color", "red")
+
         } else if (color == "#ffff00") {
-            val idPiece1 = "3011Y" //yellow
-            jsonObject.addProperty("idPiece", idPiece1)
+            val idPiece = "3011Y" //yellow
+            jsonObject.addProperty("idPiece", idPiece)
+            val idStep = "b12345"
+            jsonObject.addProperty("idStep", idStep)
+
+            jsonObject.addProperty("color", "yellow")
+
         } else if (color == "#ffffff") {
-            val idPiece2 = "3011W" //white
-            jsonObject.addProperty("idPiece", idPiece2)
+            val idPiece = "3011W" //white
+            jsonObject.addProperty("idPiece", idPiece)
+
+            val idStep = "b6897"
+            jsonObject.addProperty("idStep", idStep)
+
+            jsonObject.addProperty("color", "white")
+
         } else if (color == "#0000ff") {
-            val idPiece3 = "3437B" //Blue
-            jsonObject.addProperty("idPiece", idPiece3)
+            val idPiece = "3437B" //Blue
+            jsonObject.addProperty("idPiece", idPiece)
+
+            val idStep = "a12345"
+            jsonObject.addProperty("idStep", idStep)
+
+            jsonObject.addProperty("color", "blue")
+
         } else if (color == "#ffa500") {
-            val idPiece4 = "3437O" //orange
-            jsonObject.addProperty("idPiece", idPiece4)
+            val idPiece = "3437O" //orange
+            jsonObject.addProperty("idPiece", idPiece)
+
+            val idStep = "d12345"
+            jsonObject.addProperty("idStep", idStep)
+
+            jsonObject.addProperty("color", "orange")
         }
+
+        jsonObject.addProperty("coordinates", dimensions)
         //File(nomesaida).writeText(gson.toJson(jsonObject))
         return jsonObject
     }
