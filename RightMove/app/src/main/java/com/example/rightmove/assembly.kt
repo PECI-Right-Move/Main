@@ -21,8 +21,11 @@ import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.gson.Gson
+import com.google.gson.JsonObject
+import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
+import java.io.File
 import java.sql.Time
 import java.util.concurrent.TimeUnit
 
@@ -207,7 +210,6 @@ class assembly : AppCompatActivity() {
 
 
 
-
                                     // Start the preview of the first scanner
                                     codeScanner.startPreview()
                                 } catch (e: Exception) {
@@ -266,6 +268,35 @@ class assembly : AppCompatActivity() {
                 return
             }
         }
+    }
+
+    private fun jsonfile (nomearquivo: String):JsonObject {
+        val json = JSONObject(nomearquivo)
+        val color = json.getString("color")
+        val dimensions = json.getString("dimensions")
+
+        val jsonObject = JsonObject()
+        jsonObject.addProperty("color", color)
+        jsonObject.addProperty("dimensions", dimensions)
+
+        if (color == "#ff0000") {
+            val idPiece = "76371" //red 1x2
+            jsonObject.addProperty("idPiece", idPiece)
+        } else if (color == "#ffff00") {
+            val idPiece1 = "3011Y" //yellow
+            jsonObject.addProperty("idPiece", idPiece1)
+        } else if (color == "#ffffff") {
+            val idPiece2 = "3011W" //white
+            jsonObject.addProperty("idPiece", idPiece2)
+        } else if (color == "#0000ff") {
+            val idPiece3 = "3437B" //Blue
+            jsonObject.addProperty("idPiece", idPiece3)
+        } else if (color == "#ffa500") {
+            val idPiece4 = "3437O" //orange
+            jsonObject.addProperty("idPiece", idPiece4)
+        }
+        //File(nomesaida).writeText(gson.toJson(jsonObject))
+        return jsonObject
     }
 
 
