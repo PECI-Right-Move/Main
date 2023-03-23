@@ -21,4 +21,9 @@ class Menu : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun openProjection(view: View) {
+        val intent = Intent(this, colorVerification::class.java)
+        startActivity(intent)
+    }
+
 }
