@@ -257,13 +257,11 @@ class assembly : AppCompatActivity() {
         }
 
 
-        scanner_view.setOnClickListener {
-            codeScanner.startPreview()
-        }
 
     }
 
     private fun secondcodeScanner() {
+        codeScanner.startPreview()
         Log.e("MYAPP", "Entrou Second")
 
         codeScanner.apply {
