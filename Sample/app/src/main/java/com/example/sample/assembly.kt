@@ -255,9 +255,6 @@ class assembly : AppCompatActivity() {
                 }
             }
         }
-
-
-
     }
 
     private fun secondcodeScanner() {
