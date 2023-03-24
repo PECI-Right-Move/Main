@@ -30,6 +30,7 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStream
 import java.sql.Time
+import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.Continuation
@@ -62,6 +63,10 @@ class assembly : AppCompatActivity() {
 
     private var color : String = ""
 
+    var currentPiece = -1
+
+    private lateinit var piecesIds: Array<String>
+
 
 
 
@@ -83,10 +88,13 @@ class assembly : AppCompatActivity() {
 
         jsonInfo = findViewById(R.id.jsonInfo)
 
+        codeScanner = CodeScanner(this, scanner_view)
 
         setupPermissions()
         readJson()
+        Log.i("MyAPP", "antes da f")
         firstcodeScanner()
+        Log.i("MyAPP", "antes epois da f")
 
 
         // Set scanning to true when the activity starts
@@ -138,7 +146,7 @@ class assembly : AppCompatActivity() {
             image_view.visibility = View.GONE
 
             scanning = true
-            codeScanner.startPreview()
+            //codeScanner.startPreview()
         } else {
             super.onBackPressed()
         }
@@ -177,14 +185,13 @@ class assembly : AppCompatActivity() {
     }
 
     private fun firstcodeScanner() {
-        codeScanner = CodeScanner(this, scanner_view)
 
         codeScanner.apply {
             camera = CodeScanner.CAMERA_BACK
             formats = CodeScanner.ALL_FORMATS
 
             autoFocusMode = AutoFocusMode.SAFE
-            scanMode = ScanMode.CONTINUOUS
+            scanMode = ScanMode.SINGLE
             isAutoFocusEnabled = true
             isFlashEnabled = false
 
@@ -192,6 +199,7 @@ class assembly : AppCompatActivity() {
             decodeCallback = DecodeCallback { result ->
                 runOnUiThread {
                     try {
+
                         val qrData = Gson().fromJson(result.text, AssemblyData::class.java)
                         codeAssembly = qrData.assemblyId
                         val pieces = arrayOf(
@@ -201,14 +209,11 @@ class assembly : AppCompatActivity() {
                             "4th Piece: ${qrData.piece4}"
                         )
 
-                        val piecesIds = arrayOf( "${qrData.piece1}",
+                        piecesIds = arrayOf( "${qrData.piece1}",
                             "${qrData.piece2}",
                             "${qrData.piece3}",
                             "${qrData.piece4}")
 
-
-                        //var currentPiece = 0
-                        val collected = mutableListOf<String>()
 
                         // Update the QR code information views
                         qrInfoTitle.text = qrData.name
@@ -224,97 +229,16 @@ class assembly : AppCompatActivity() {
                         image_view.visibility = View.VISIBLE //
                         tv_textView.visibility = View.GONE
 
-                        var currentPiece = -1
-                        // Start the preview of the second scanner
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            codeScanner.decodeCallback = DecodeCallback { result ->
-                                runOnUiThread {
-                                    try {
-                                        val qrData =
-                                            Gson().fromJson(result.text, QRCodeData::class.java)
-                                        val secondQRId = qrData.id
+                        currentPiece = -1
 
-                                        if (secondQRId == piecesIds[currentPiece + 1]) {
-                                            // show "Piece 1 Collected" notification
-                                            Toast.makeText(
-                                                this@assembly,
-                                                "${secondQRId} Collected",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                            currentPiece++
-
-                                            Log.d("MYAPP", "Entrou")
-                                            verificationFirst(
-                                                secondQRId,
-                                                currentPiece,
-                                                codeAssembly
-                                            )
-
-                                            Log.d("MYAPP", "Saiu e tem " + color)
-
-                                            if (currentPiece == 3) {
-
-                                                // Show a pop-up window with an error message and a return button
-                                                AlertDialog.Builder(this@assembly)
-                                                    .setTitle("Your Pieces were all collected!")
-                                                    .setMessage("Now you can start your assembly")
-                                                    .setPositiveButton("Collect pieces for a new Assembly") { _, _ ->
-                                                        scanning = true
-                                                        currentPiece = -1
-                                                        codeScanner.startPreview()
-                                                        firstcodeScanner()
-                                                    }
-                                                    .show()
-
-                                            }
-
-                                        } else {
-                                            // show "Wrong Piece" notification
-                                            Toast.makeText(
-                                                this@assembly,
-                                                "Wrong Piece, you collected ${secondQRId} ",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-
-                                        //AQUI
-                                        // update views, etc.
-                                        tv_textView.text = qrData.id.toString()
-                                        val resourceId = resources.getIdentifier(qrData.name, "drawable", packageName)
-                                        image_view.setImageResource(resourceId)
-
-
-                                        scanning = false
-                                        image_view.visibility = View.VISIBLE
-                                        tv_textView.visibility = View.GONE
-
-
-
-
-
-
-                                        // Start the preview of the first scanner
-                                        codeScanner.startPreview()
-                                    } catch (e: Exception) {
-                                        // Show a pop-up window with an error message and a return button
-                                        AlertDialog.Builder(this@assembly)
-                                            .setTitle("Invalid QR")
-                                            .setMessage("The scanned QR code is invalid.")
-                                            .setPositiveButton("Return") { _, _ ->
-                                                scanning = true
-                                                codeScanner.startPreview()
-                                            }
-                                            .show()
-                                    }
-                                }
-                            }}, 5000)
-
+                        Log.i("MYAPP", "Vai entrar")
+                        secondcodeScanner()
                         scanning = false
                     } catch (e: Exception) {
                         // Show a pop-up window with an error message and a return button
                         AlertDialog.Builder(this@assembly)
                             .setTitle("Invalid QR")
-                            .setMessage("The scanned QR code is invalid.")
+                            .setMessage("The scanned QR code is invalid. asdasdasdsa")
                             .setPositiveButton("Return") { _, _ ->
                                 // Hide the pop-up window and restart scanning
                                 scanning = true
@@ -332,11 +256,114 @@ class assembly : AppCompatActivity() {
             }
         }
 
+
         scanner_view.setOnClickListener {
             codeScanner.startPreview()
         }
+
     }
 
+    private fun secondcodeScanner() {
+        Log.e("MYAPP", "Entrou Second")
+
+        codeScanner.apply {
+            camera = CodeScanner.CAMERA_BACK
+            formats = CodeScanner.ALL_FORMATS
+
+            autoFocusMode = AutoFocusMode.SAFE
+            scanMode = ScanMode.SINGLE
+            isAutoFocusEnabled = true
+            isFlashEnabled = false
+
+
+
+            codeScanner.decodeCallback = DecodeCallback { result ->
+                runOnUiThread {
+                    try {
+                        val qrData =
+                            Gson().fromJson(result.text, QRCodeData::class.java)
+                        val secondQRId = qrData.id
+
+                        if (secondQRId == piecesIds[currentPiece + 1]) {
+                            // show "Piece 1 Collected" notification
+                            Toast.makeText(
+                                this@assembly,
+                                "${secondQRId} Collected",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            currentPiece++
+
+                            Log.d("MYAPP", "Entrou")
+                            verificationFirst(
+                                secondQRId,
+                                currentPiece,
+                                codeAssembly
+                            )
+
+                            Log.d("MYAPP", "Saiu e tem " + color)
+
+                            if (currentPiece == 3) {
+
+                                // Show a pop-up window with an error message and a return button
+                                AlertDialog.Builder(this@assembly)
+                                    .setTitle("Your Pieces were all collected!")
+                                    .setMessage("Now you can start your assembly")
+                                    .setPositiveButton("Collect pieces for a new Assembly") { _, _ ->
+                                        scanning = true
+                                        currentPiece = -1
+                                        codeScanner.startPreview()
+                                        firstcodeScanner()
+                                    }
+                                    .show()
+
+                            }
+
+                        } else {
+                            // show "Wrong Piece" notification
+                            Toast.makeText(
+                                this@assembly,
+                                "Wrong Piece, you collected ${secondQRId} ",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        //AQUI
+                        // update views, etc.
+                        tv_textView.text = qrData.id.toString()
+                        val resourceId = resources.getIdentifier(qrData.name, "drawable", packageName)
+                        image_view.setImageResource(resourceId)
+
+
+                        scanning = false
+                        image_view.visibility = View.VISIBLE
+                        tv_textView.visibility = View.GONE
+
+                        // Start the preview of the first scanner
+                        codeScanner.startPreview()
+                    } catch (e: Exception) {
+                        // Show a pop-up window with an error message and a return button
+                        AlertDialog.Builder(this@assembly)
+                            .setTitle("Invalid QR")
+                            .setMessage("The scanned QR code is invalid.")
+                            .setPositiveButton("Return") { _, _ ->
+                                scanning = true
+                                codeScanner.startPreview()
+                            }
+                            .show()
+                    }
+                }
+            }
+            errorCallback = ErrorCallback { error ->
+                runOnUiThread {
+                    Log.e("Main", "Camera initialization error: ${error.message}")
+                }
+            }
+        }
+
+        /*scanner_view.setOnClickListener {
+            codeScanner.startPreview()
+        }*/
+    }
     private fun verificationFirst(id: String, index: Int, assembly: String) {
         val instruction = instructionsList.find { it.assembly == assembly }
         if (instruction != null) {
@@ -351,8 +378,11 @@ class assembly : AppCompatActivity() {
                             val resourceId = resources.getIdentifier(instruction.steps[index].idStep, "drawable", packageName)
                             image_view.setImageResource(resourceId)
                             image_view.visibility = View.VISIBLE
-                            return
                         }
+                        else{
+                            currentPiece --
+                        }
+                        secondcodeScanner()
                     }
                 }
             )
@@ -377,7 +407,7 @@ class assembly : AppCompatActivity() {
         intent.putExtra("pieceX", x)
         intent.putExtra("pieceY", y)
         Log.i("MYAPP", "Before")
-        runBlocking { colorVerificationLauncher.launch(intent) }
+        colorVerificationLauncher.launch(intent)
         Log.i("MYAPP", "After")
 
     }
