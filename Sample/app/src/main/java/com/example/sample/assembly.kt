@@ -215,14 +215,25 @@ class assembly : AppCompatActivity() {
                             "${qrData.piece3}",
                             "${qrData.piece4}")
 
-                        val pieces = piecesIds.mapIndexed { index, pieceId ->
+                        val matchingAssembly = instructionsList.find { it.assembly == codeAssembly }
+
+                        val stepsWithCoords = matchingAssembly?.steps?.map { step ->
+                            "(${step.coordinates.x}, ${step.coordinates.y})"
+                        } ?: emptyList()
+
+                        val piecesWithCoords = piecesIds.mapIndexed { index, pieceId ->
                             val pieceName = piecesList.find { it.id == pieceId }?.name ?: "Unknown"
-                            "${index + 1}st Piece: $pieceName"
-                        }.toTypedArray()
+                            Pair(pieceName, stepsWithCoords.getOrNull(index))
+                        }
+
+                        val pieces: String = piecesWithCoords.withIndex().joinToString("\n\n") { (index, piece) ->
+                            "Piece ${index + 1} : ${piece.first}\nCoords: ${piece.second}"
+                        }
+
 
                         // Update the QR code information views
                         qrInfoTitle.text = qrData.name
-                        qrInfoDetails.text = pieces.joinToString(separator = "\n")
+                        qrInfoDetails.text = pieces
 
                         // Show the QR code information layout
                         qrInfoLayout.visibility = View.VISIBLE
