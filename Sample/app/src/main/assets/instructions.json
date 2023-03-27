@@ -7,9 +7,9 @@
         "color":"blue",
         "coordinates": {"x":2, "y":2}},
       {
-        "idPiece":"3011Y",
+        "idPiece":"3437O",
         "idStep": "b12345",
-        "color":"yellow",
+        "color":"orange",
         "coordinates": {"x":4, "y":2}},
       {
         "idPiece":"76371R",
@@ -20,6 +20,6 @@
         "idPiece":"3011W",
         "idStep": "d12345",
         "color":"white",
-        "coordinates": {"x":5, "y":2}}
+        "coordinates": {"x":6, "y":2}}
     ]}
 ]
