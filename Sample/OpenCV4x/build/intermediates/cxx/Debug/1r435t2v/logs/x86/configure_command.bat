@@ -1,19 +1,19 @@
 @echo off
-"C:\\Users\\LEGION\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\cmake.exe" ^
-  "-HC:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\libcxx_helper" ^
+"C:\\Users\\catar\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\cmake.exe" ^
+  "-HC:\\Users\\catar\\Desktop\\UNI\\PECI\\Main\\Sample\\OpenCV4x\\libcxx_helper" ^
   "-DCMAKE_SYSTEM_NAME=Android" ^
   "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON" ^
   "-DCMAKE_SYSTEM_VERSION=24" ^
   "-DANDROID_PLATFORM=android-24" ^
   "-DANDROID_ABI=x86" ^
   "-DCMAKE_ANDROID_ARCH_ABI=x86" ^
-  "-DANDROID_NDK=C:\\Users\\LEGION\\AppData\\Local\\Android\\Sdk\\ndk\\23.1.7779620" ^
-  "-DCMAKE_ANDROID_NDK=C:\\Users\\LEGION\\AppData\\Local\\Android\\Sdk\\ndk\\23.1.7779620" ^
-  "-DCMAKE_TOOLCHAIN_FILE=C:\\Users\\LEGION\\AppData\\Local\\Android\\Sdk\\ndk\\23.1.7779620\\build\\cmake\\android.toolchain.cmake" ^
-  "-DCMAKE_MAKE_PROGRAM=C:\\Users\\LEGION\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe" ^
-  "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\build\\intermediates\\cxx\\Debug\\1r435t2v\\obj\\x86" ^
-  "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=C:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\build\\intermediates\\cxx\\Debug\\1r435t2v\\obj\\x86" ^
+  "-DANDROID_NDK=C:\\Users\\catar\\AppData\\Local\\Android\\Sdk\\ndk\\23.1.7779620" ^
+  "-DCMAKE_ANDROID_NDK=C:\\Users\\catar\\AppData\\Local\\Android\\Sdk\\ndk\\23.1.7779620" ^
+  "-DCMAKE_TOOLCHAIN_FILE=C:\\Users\\catar\\AppData\\Local\\Android\\Sdk\\ndk\\23.1.7779620\\build\\cmake\\android.toolchain.cmake" ^
+  "-DCMAKE_MAKE_PROGRAM=C:\\Users\\catar\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe" ^
+  "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=C:\\Users\\catar\\Desktop\\UNI\\PECI\\Main\\Sample\\OpenCV4x\\build\\intermediates\\cxx\\Debug\\1r435t2v\\obj\\x86" ^
+  "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=C:\\Users\\catar\\Desktop\\UNI\\PECI\\Main\\Sample\\OpenCV4x\\build\\intermediates\\cxx\\Debug\\1r435t2v\\obj\\x86" ^
   "-DCMAKE_BUILD_TYPE=Debug" ^
-  "-BC:\\Users\\LEGION\\Documents\\GitHub\\Main\\Sample\\OpenCV4x\\.cxx\\Debug\\1r435t2v\\x86" ^
+  "-BC:\\Users\\catar\\Desktop\\UNI\\PECI\\Main\\Sample\\OpenCV4x\\.cxx\\Debug\\1r435t2v\\x86" ^
   -GNinja ^
   "-DANDROID_STL=c++_shared"

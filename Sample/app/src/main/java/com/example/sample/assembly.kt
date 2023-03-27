@@ -59,6 +59,8 @@ class assembly : AppCompatActivity() {
 
     private val instructionsList = mutableListOf<Instruction>()
 
+    private val piecesList = mutableListOf<QRCodeData>()
+
     private lateinit var codeAssembly: String
 
     private var color : String = ""
@@ -104,10 +106,16 @@ class assembly : AppCompatActivity() {
     private fun readJson(){
 
         var json: String? = null
+        var jsonPieces: String? = null
         try{
             val input: InputStream = assets.open("instructions.json")
             json = input.bufferedReader().use{it.readText()}
             instructionsList.addAll(Gson().fromJson(json, Array<Instruction>::class.java).toList())
+            val inputPieces: InputStream = assets.open("pieces.json")
+            jsonPieces = inputPieces.bufferedReader().use{it.readText()}
+            piecesList.addAll(Gson().fromJson(jsonPieces, Array<QRCodeData>::class.java).toList())
+
+
         } catch (e : IOException)
         {
 
@@ -202,18 +210,15 @@ class assembly : AppCompatActivity() {
 
                         val qrData = Gson().fromJson(result.text, AssemblyData::class.java)
                         codeAssembly = qrData.assemblyId
-                        val pieces = arrayOf(
-                            "1st Piece: ${qrData.piece1}",
-                            "2nd Piece: ${qrData.piece2}",
-                            "3rd Piece: ${qrData.piece3}",
-                            "4th Piece: ${qrData.piece4}"
-                        )
-
                         piecesIds = arrayOf( "${qrData.piece1}",
                             "${qrData.piece2}",
                             "${qrData.piece3}",
                             "${qrData.piece4}")
 
+                        val pieces = piecesIds.mapIndexed { index, pieceId ->
+                            val pieceName = piecesList.find { it.id == pieceId }?.name ?: "Unknown"
+                            "${index + 1}st Piece: $pieceName"
+                        }.toTypedArray()
 
                         // Update the QR code information views
                         qrInfoTitle.text = qrData.name
