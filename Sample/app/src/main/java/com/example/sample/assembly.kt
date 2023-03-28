@@ -274,7 +274,6 @@ class assembly : AppCompatActivity() {
     }
 
     private fun secondcodeScanner() {
-        codeScanner.startPreview()
         Log.e("MYAPP", "Entrou Second")
 
         codeScanner.apply {
@@ -286,7 +285,7 @@ class assembly : AppCompatActivity() {
             isAutoFocusEnabled = true
             isFlashEnabled = false
 
-
+            codeScanner.startPreview()
 
             codeScanner.decodeCallback = DecodeCallback { result ->
                 runOnUiThread {
@@ -408,6 +407,7 @@ class assembly : AppCompatActivity() {
             val data = result.data
             val color = data?.getStringExtra("color").toString()
             Log.i("MYAPp", "$color color Selected")
+            Toast.makeText(this, "Color found : $color" , Toast.LENGTH_SHORT).show()
             colorSelectedListener?.onColorSelected(color)
         }
     }
