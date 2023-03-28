@@ -7,9 +7,9 @@
         "color":"blue",
         "coordinates": {"x":2, "y":2}},
       {
-        "idPiece":"3011Y",
+        "idPiece":"3437O",
         "idStep": "b12345",
-        "color":"yellow",
+        "color":"orange",
         "coordinates": {"x":4, "y":2}},
       {
         "idPiece":"76371R",
@@ -20,6 +20,53 @@
         "idPiece":"3011W",
         "idStep": "d12345",
         "color":"white",
-        "coordinates": {"x":5, "y":2}}
+        "coordinates": {"x":6, "y":2}}
+    ]},
+  { "assembly":"23456",
+    "steps":[
+      {
+        "idPiece":"3011W",
+        "idStep": "a23456",
+        "color":"white",
+        "coordinates": {"x":6, "y":1}},
+      {
+        "idPiece":"3011Y",
+        "idStep": "b23456",
+        "color":"yellow",
+        "coordinates": {"x":6, "y":5}},
+      {
+        "idPiece":"3437O",
+        "idStep": "c23456",
+        "color":"orange",
+        "coordinates": {"x":4, "y":3}},
+      {
+        "idPiece":"3437B",
+        "idStep": "d23456",
+        "color":"blue",
+        "coordinates": {"x":10, "y":3}}
+    ]},
+  { "assembly":"34567",
+    "steps":[
+      {
+        "idPiece":"76371R",
+        "idStep": "a34567",
+        "color":"red",
+        "coordinates": {"x":10, "y":2}},
+      {
+        "idPiece":"76371R",
+        "idStep": "b34567",
+        "color":"red",
+        "coordinates": {"x":10, "y":4}},
+      {
+        "idPiece":"3011Y",
+        "idStep": "c34567",
+        "color":"yellow",
+        "coordinates": {"x":6, "y":2}},
+      {
+        "idPiece":"3011W",
+        "idStep": "d34567",
+        "color":"white",
+        "coordinates": {"x":3, "y":2}}
     ]}
+
 ]

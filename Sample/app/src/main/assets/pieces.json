@@ -1,0 +1,31 @@
+[
+      { "id":"3437O",
+        "color":"orange",
+        "dimensions": {"x":2, "y":2},
+        "name" : "orange2x2"},
+      {
+        "id":"3437R",
+        "color":"red",
+        "dimensions": {"x":2, "y":2},
+        "name" : "red2x2"},
+      {
+        "id":"3437B",
+        "color":"blue",
+        "dimensions": {"x":2, "y":2},
+        "name" : "blue2x2"},
+      {
+        "id":"3011W",
+        "color":"white",
+        "dimensions": {"x":4, "y":2},
+        "name" : "white4x2"},
+      {
+        "id":"3011Y",
+        "color":"yellow",
+        "dimensions": {"x":4, "y":2},
+        "name" : "yellow4x2"},
+      {
+        "id":"76371R",
+        "color":"red",
+        "dimensions": {"x":1, "y":2},
+        "name" : "red1x2x2"}
+    ]
