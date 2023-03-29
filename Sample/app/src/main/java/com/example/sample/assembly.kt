@@ -33,7 +33,9 @@ import java.sql.Time
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.schedule
 import kotlin.coroutines.Continuation
+import kotlin.system.exitProcess
 
 private const val  CAMERA_REQUEST_CODE = 101
 
@@ -287,6 +289,8 @@ class assembly : AppCompatActivity() {
 
             codeScanner.startPreview()
 
+            Timer().schedule(500){
+
             codeScanner.decodeCallback = DecodeCallback { result ->
                 runOnUiThread {
                     try {
@@ -362,6 +366,7 @@ class assembly : AppCompatActivity() {
                             .show()
                     }
                 }
+            }
             }
             errorCallback = ErrorCallback { error ->
                 runOnUiThread {
