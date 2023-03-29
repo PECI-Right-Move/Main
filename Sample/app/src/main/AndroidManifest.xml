@@ -11,6 +11,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sample"
         tools:targetApi="31">
+
+        <activity android:name=".Calibration" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
         <activity
             android:name=".colorVerification"
             android:exported="true">
@@ -23,11 +33,6 @@
             android:name=".Menu"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
