@@ -270,10 +270,13 @@ class assembly : AppCompatActivity() {
         }
     }
 
-    private fun jsonfile (nomearquivo: String):JsonObject {
-        val json = JSONObject(nomearquivo)
+
+    //para um elemento
+    private fun jsonfile (filename: String):JsonObject {
+        val json = JSONObject(filename)
         val color = json.getString("color")
         val dimensions = json.getString("dimensions")
+
 
         val jsonObject = JsonObject()
 
