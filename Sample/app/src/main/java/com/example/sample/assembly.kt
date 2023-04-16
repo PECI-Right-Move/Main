@@ -33,7 +33,9 @@ import java.sql.Time
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.schedule
 import kotlin.coroutines.Continuation
+import kotlin.system.exitProcess
 
 private const val  CAMERA_REQUEST_CODE = 101
 
@@ -274,7 +276,6 @@ class assembly : AppCompatActivity() {
     }
 
     private fun secondcodeScanner() {
-        codeScanner.startPreview()
         Log.e("MYAPP", "Entrou Second")
 
         codeScanner.apply {
@@ -286,7 +287,9 @@ class assembly : AppCompatActivity() {
             isAutoFocusEnabled = true
             isFlashEnabled = false
 
+            codeScanner.startPreview()
 
+            Timer().schedule(500){
 
             codeScanner.decodeCallback = DecodeCallback { result ->
                 runOnUiThread {
@@ -364,6 +367,7 @@ class assembly : AppCompatActivity() {
                     }
                 }
             }
+            }
             errorCallback = ErrorCallback { error ->
                 runOnUiThread {
                     Log.e("Main", "Camera initialization error: ${error.message}")
@@ -408,6 +412,7 @@ class assembly : AppCompatActivity() {
             val data = result.data
             val color = data?.getStringExtra("color").toString()
             Log.i("MYAPp", "$color color Selected")
+            Toast.makeText(this, "Color found : $color" , Toast.LENGTH_SHORT).show()
             colorSelectedListener?.onColorSelected(color)
         }
     }
