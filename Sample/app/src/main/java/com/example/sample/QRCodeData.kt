@@ -13,11 +13,10 @@ data class Dimensions(
 )
 
 data class Step(
-    var idPiece: String,
+    val idPiece: String,
     val idStep: String,
-    var color: String,
-    val coordinates: Dimensions,
-    var dimensions: String
+    val color: String,
+    val coordinates: Dimensions
 )
 
 data class Instruction(

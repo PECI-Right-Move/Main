@@ -196,13 +196,15 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
 
             Pino[][] matrix = placa.getMatrix();
 
-            int pinoX = getPieceX();
-            int pinoY = getPieceY();
-            boolean gotCord = true;
-            if(pinoX == -1 && pinoY == -1){
-                pinoY=0;
-                pinoX=0;
-                gotCord = false;
+            int pinoY = -1;
+            int pinoX = -1;
+            while(pinoX == -1 || pinoY == -1){
+                if(pinoX == -1){
+                    pinoX = getPieceX();
+                }
+                if (pinoY == -1){
+                    pinoY = getPieceY();
+                }
             }
 
             double x = matrix[pinoX][pinoY].x;
@@ -237,7 +239,6 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                     new Scalar(0, 255, 0), // Green
                     new Scalar(0, 0, 255), // Blue
                     new Scalar(255, 255, 255), // White
-                    new Scalar(255, 128, 0), // Orange
             };
 
             // Calculate the Euclidean distance between the pixel's RGB values and each color in the color space
@@ -276,9 +277,6 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 case 4:
                     closestColorName = "White";
                     break;
-                case 5:
-                    closestColorName = "Orange";
-                    break;
                 default:
                     closestColorName = "Unknown";
                     break;
@@ -288,10 +286,7 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
 
             Log.e("MyApp", "The color is " + closestColorName);
 
-            if(gotCord){
-                setResultColor(closestColorName);
-            }
-
+            setResultColor(closestColorName);
 
         }
 
