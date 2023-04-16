@@ -272,8 +272,20 @@ class assembly : AppCompatActivity() {
 
     private fun jsonfile (nomearquivo: String):JsonObject {
         val json = JSONObject(nomearquivo)
-        val color = json.getString("color")
-        val dimensions = json.getString("dimensions")
+        val color = json.getJSONArray(0.toString()).getJSONObject(0).getString("color")
+        val dimensions = json.getJSONArray(0.toString()).getJSONObject(0).getString("dimensions")
+
+        val color1 = json.getJSONArray(0.toString()).getJSONObject(1).getString("color")
+        val dimensions1 = json.getJSONArray(0.toString()).getJSONObject(1).getString("dimensions")
+
+        val color2 = json.getJSONArray(0.toString()).getJSONObject(2).getString("color")
+        val dimensions2 = json.getJSONArray(0.toString()).getJSONObject(2).getString("dimensions")
+
+        val color3 = json.getJSONArray(0.toString()).getJSONObject(3).getString("color")
+        val dimensions3 = json.getJSONArray(0.toString()).getJSONObject(3).getString("dimensions")
+
+        Log.e("Color", color)
+        Log.e("Dimensions", dimensions)
 
         val jsonObject = JsonObject()
 
@@ -323,7 +335,152 @@ class assembly : AppCompatActivity() {
         }
 
         jsonObject.addProperty("coordinates", dimensions)
-        //File(nomesaida).writeText(gson.toJson(jsonObject))
+
+        //segunda peça
+        if (color1 == "#ff0000") {
+            val idPiece1 = "76371" //red 1x2
+            jsonObject.addProperty("idPiece", idPiece1)
+
+            val idStep1 = "c12345"
+            jsonObject.addProperty("idStep", idStep1)
+
+            jsonObject.addProperty("color", "red")
+
+        } else if (color1 == "#ffff00") {
+            val idPiece1 = "3011Y" //yellow
+            jsonObject.addProperty("idPiece", idPiece1)
+            val idStep1 = "b12345"
+            jsonObject.addProperty("idStep", idStep1)
+
+            jsonObject.addProperty("color", "yellow")
+
+        } else if (color1 == "#ffffff") {
+            val idPiece1 = "3011W" //white
+            jsonObject.addProperty("idPiece", idPiece1)
+
+            val idStep1 = "b6897"
+            jsonObject.addProperty("idStep", idStep1)
+
+            jsonObject.addProperty("color", "white")
+
+        } else if (color1 == "#0000ff") {
+            val idPiece1 = "3437B" //Blue
+            jsonObject.addProperty("idPiece", idPiece1)
+
+            val idStep1 = "a12345"
+            jsonObject.addProperty("idStep", idStep1)
+
+            jsonObject.addProperty("color", "blue")
+
+        } else if (color1 == "#ffa500") {
+            val idPiece1 = "3437O" //orange
+            jsonObject.addProperty("idPiece", idPiece1)
+
+            val idStep1 = "d12345"
+            jsonObject.addProperty("idStep", idStep1)
+
+            jsonObject.addProperty("color", "orange")
+        }
+
+        jsonObject.addProperty("coordinates", dimensions)
+
+        // terceira peça
+        if (color2 == "#ff0000") {
+            val idPiece2 = "76371" //red 1x2
+            jsonObject.addProperty("idPiece", idPiece2)
+
+            val idStep2 = "c12345"
+            jsonObject.addProperty("idStep", idStep2)
+
+            jsonObject.addProperty("color", "red")
+
+        } else if (color2 == "#ffff00") {
+            val idPiece2 = "3011Y" //yellow
+            jsonObject.addProperty("idPiece", idPiece2)
+            val idStep2 = "b12345"
+            jsonObject.addProperty("idStep", idStep2)
+
+            jsonObject.addProperty("color", "yellow")
+
+        } else if (color2 == "#ffffff") {
+            val idPiece2 = "3011W" //white
+            jsonObject.addProperty("idPiece", idPiece2)
+
+            val idStep2 = "b6897"
+            jsonObject.addProperty("idStep", idStep2)
+
+            jsonObject.addProperty("color", "white")
+
+        } else if (color2 == "#0000ff") {
+            val idPiece2 = "3437B" //Blue
+            jsonObject.addProperty("idPiece", idPiece2)
+
+            val idStep2 = "a12345"
+            jsonObject.addProperty("idStep", idStep2)
+
+            jsonObject.addProperty("color", "blue")
+
+        } else if (color2 == "#ffa500") {
+            val idPiece2 = "3437O" //orange
+            jsonObject.addProperty("idPiece", idPiece2)
+
+            val idStep2 = "d12345"
+            jsonObject.addProperty("idStep", idStep2)
+
+            jsonObject.addProperty("color", "orange")
+        }
+
+        jsonObject.addProperty("coordinates", dimensions)
+
+        //quarta peça
+
+        if (color3 == "#ff0000") {
+            val idPiece3 = "76371" //red 1x2
+            jsonObject.addProperty("idPiece", idPiece3)
+
+            val idStep3 = "c12345"
+            jsonObject.addProperty("idStep", idStep3)
+
+            jsonObject.addProperty("color", "red")
+
+        } else if (color3 == "#ffff00") {
+            val idPiece3 = "3011Y" //yellow
+            jsonObject.addProperty("idPiece", idPiece3)
+            val idStep3 = "b12345"
+            jsonObject.addProperty("idStep", idStep3)
+
+            jsonObject.addProperty("color", "yellow")
+
+        } else if (color3 == "#ffffff") {
+            val idPiece3 = "3011W" //white
+            jsonObject.addProperty("idPiece", idPiece3)
+
+            val idStep3 = "b6897"
+            jsonObject.addProperty("idStep", idStep3)
+
+            jsonObject.addProperty("color", "white")
+
+        } else if (color3 == "#0000ff") {
+            val idPiece = "3437B" //Blue
+            jsonObject.addProperty("idPiece", idPiece3)
+
+            val idStep3 = "a12345"
+            jsonObject.addProperty("idStep", idStep3)
+
+            jsonObject.addProperty("color", "blue")
+
+        } else if (color3 == "#ffa500") {
+            val idPiece3 = "3437O" //orange
+            jsonObject.addProperty("idPiece", idPiece3)
+
+            val idStep3 = "d12345"
+            jsonObject.addProperty("idStep", idStep3)
+
+            jsonObject.addProperty("color", "orange")
+        }
+
+        jsonObject.addProperty("coordinates", dimensions)
+
         return jsonObject
     }
 
