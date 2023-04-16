@@ -22,6 +22,6 @@ data class Step(
 
 data class Instruction(
     val assembly: String,
-    val steps : List<Step>,
+    val steps : Array<Step>,
 )
 
