@@ -136,8 +136,7 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
             // Apply Hough transform to detect circles
             Mat circles = new Mat();
             Imgproc.HoughCircles(img, circles, Imgproc.HOUGH_GRADIENT, 1, 20, 30, 30, 15, 40);
-
-            if (circles.total()==128) {
+            if (circles.total()!=0) {
                 // Convert the (x, y) coordinates and radius of the circles to integers
                 int numCircles = (int) circles.total();
                 Point[] circleCenters = new Point[numCircles];
@@ -169,110 +168,111 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                         finalRadii.add(circleRadii[i]);
                     }
                 }
-
-                for (int i = 0; i < finalCenters.size(); i++) {
-                    Imgproc.circle(rgba, finalCenters.get(i), Math.round(finalRadii.get(i)), new Scalar(0, 255, 0), 2);
-                }
-                Placa placa =new Placa(finalCenters);
-
-
-                Pino[][] matrix = placa.getMatrix();
-
-                int pinoY = -1;
-                int pinoX = -1;
-                while(pinoX == -1 || pinoY == -1){
-                    if(pinoX == -1){
-                        pinoX = getPieceX();
+                System.out.println(finalCenters.size());
+                if (finalCenters.size()== 128) {
+                    for (int i = 0; i < finalCenters.size(); i++) {
+                        Imgproc.circle(rgba, finalCenters.get(i), Math.round(finalRadii.get(i)), new Scalar(0, 255, 0), 2);
                     }
-                    if (pinoY == -1){
-                        pinoY = getPieceY();
+                    Placa placa = new Placa(finalCenters);
+
+                    System.out.println("antes pino");
+                    Pino[][] matrix = placa.getMatrix();
+                    System.out.println("depois");
+
+                    int pinoY = -1;
+                    int pinoX = -1;
+                    while (pinoX == -1 || pinoY == -1) {
+                        if (pinoX == -1) {
+                            pinoX = getPieceX();
+                        }
+                        if (pinoY == -1) {
+                            pinoY = getPieceY();
+                        }
                     }
-                }
+                    System.out.println("adsasdasdasaadsdadasdasdda");
 
-                double x = matrix[pinoX][pinoY].x;
-                double y = matrix[pinoX][pinoY].y;
-                // Define a Scalar object to store the RGB values of the pixel
-                Scalar pixelRgb = new Scalar(0, 0, 0);
+                    double x = matrix[pinoX][pinoY].x;
+                    double y = matrix[pinoX][pinoY].y;
+                    // Define a Scalar object to store the RGB values of the pixel
+                    Scalar pixelRgb = new Scalar(0, 0, 0);
+                    System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkk");
+                    // Check if the pixel coordinates are within the bounds of the image
+                    if (x >= 0 && x < rgba.width() && y >= 0 && y < rgba.height()) {
+                        // Get the pixel value at the specified location as a 1x1 matrix
+                        Mat pixelMat = rgba.submat((int) y, (int) y + 1, (int) x, (int) x + 1);
 
-                // Check if the pixel coordinates are within the bounds of the image
-                if (x >= 0 && x < rgba.width() && y >= 0 && y < rgba.height()) {
-                    // Get the pixel value at the specified location as a 1x1 matrix
-                    Mat pixelMat = rgba.submat((int)y, (int)y + 1, (int)x, (int)x + 1);
-
-                    // Convert the 1x1 matrix to a Scalar object representing the RGB values of the pixel
-                    pixelRgb = new Scalar(pixelMat.get(0, 0));
-                }
-
-                double red = pixelRgb.val[0];
-                double green = pixelRgb.val[1];
-                double blue = pixelRgb.val[2];
-
-                for( int i=0; i<matrix.length;i++ ){
-                    for (int j =0; j<matrix[i].length;j++){
-                        Imgproc.circle(rgba, new Point(matrix[i][j].x, matrix[i][j].y), 5, new Scalar(255, 0, 0), -1);
+                        // Convert the 1x1 matrix to a Scalar object representing the RGB values of the pixel
+                        pixelRgb = new Scalar(pixelMat.get(0, 0));
                     }
-                }
 
-
-                // Define the color space to compare the pixel's RGB values against
-                Scalar[] colors = new Scalar[] {
-                        new Scalar(255, 0, 0), // Red
-                        new Scalar(255, 255, 0), // Yellow
-                        new Scalar(0, 255, 0), // Green
-                        new Scalar(0, 0, 255), // Blue
-                        new Scalar(255, 255, 255), // White
-                };
-
-                // Calculate the Euclidean distance between the pixel's RGB values and each color in the color space
-                double[] distances = new double[colors.length];
-                for (int i = 0; i < colors.length; i++) {
-                    distances[i] = Math.sqrt(Math.pow(red - colors[i].val[0], 2)
-                            + Math.pow(green - colors[i].val[1], 2)
-                            + Math.pow(blue - colors[i].val[2], 2));
-                }
-
-                // Find the index of the closest color in the color space
-                int closestColorIndex = 0;
-                double closestColorDistance = distances[0];
-                for (int i = 1; i < distances.length; i++) {
-                    if (distances[i] < closestColorDistance) {
-                        closestColorIndex = i;
-                        closestColorDistance = distances[i];
+                    double red = pixelRgb.val[0];
+                    double green = pixelRgb.val[1];
+                    double blue = pixelRgb.val[2];
+                    for (int i = 0; i < matrix.length; i++) {
+                        for (int j = 0; j < matrix[i].length; j++) {
+                            Imgproc.circle(rgba, new Point(matrix[i][j].x, matrix[i][j].y), 5, new Scalar(255, 0, 0), -1);
+                        }
                     }
+                    System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+                    // Define the color space to compare the pixel's RGB values against
+                    Scalar[] colors = new Scalar[]{
+                            new Scalar(255, 0, 0), // Red
+                            new Scalar(255, 255, 0), // Yellow
+                            new Scalar(0, 255, 0), // Green
+                            new Scalar(0, 0, 255), // Blue
+                            new Scalar(255, 255, 255), // White
+                    };
+
+                    // Calculate the Euclidean distance between the pixel's RGB values and each color in the color space
+                    double[] distances = new double[colors.length];
+                    for (int i = 0; i < colors.length; i++) {
+                        distances[i] = Math.sqrt(Math.pow(red - colors[i].val[0], 2)
+                                + Math.pow(green - colors[i].val[1], 2)
+                                + Math.pow(blue - colors[i].val[2], 2));
+                    }
+                    System.out.println("xxxxxxxxxxiiiiiiiiiiiiiiiiiiiiiiii");
+                    // Find the index of the closest color in the color space
+                    int closestColorIndex = 0;
+                    double closestColorDistance = distances[0];
+                    for (int i = 1; i < distances.length; i++) {
+                        if (distances[i] < closestColorDistance) {
+                            closestColorIndex = i;
+                            closestColorDistance = distances[i];
+                        }
+                    }
+
+                    // Get the name of the closest color
+                    String closestColorName;
+                    switch (closestColorIndex) {
+                        case 0:
+                            closestColorName = "Red";
+                            break;
+                        case 1:
+                            closestColorName = "Yellow";
+                            break;
+                        case 2:
+                            closestColorName = "Green";
+                            break;
+                        case 3:
+                            closestColorName = "Blue";
+                            break;
+                        case 4:
+                            closestColorName = "White";
+                            break;
+                        default:
+                            closestColorName = "Unknown";
+                            break;
+                    }
+
+                    // Print the name of the closest color to the log
+                    System.out.println("lasssssssssssssssssssss");
+                    Log.e("MyApp", "The color is " + closestColorName);
+
+                    setResultColor(closestColorName);
+                    // Display the resulting image
+                    System.out.println("Circles found: " + finalCenters.size());
                 }
-
-                // Get the name of the closest color
-                String closestColorName;
-                switch (closestColorIndex) {
-                    case 0:
-                        closestColorName = "Red";
-                        break;
-                    case 1:
-                        closestColorName = "Yellow";
-                        break;
-                    case 2:
-                        closestColorName = "Green";
-                        break;
-                    case 3:
-                        closestColorName = "Blue";
-                        break;
-                    case 4:
-                        closestColorName = "White";
-                        break;
-                    default:
-                        closestColorName = "Unknown";
-                        break;
-                }
-
-                // Print the name of the closest color to the log
-
-                Log.e("MyApp", "The color is " + closestColorName);
-
-                setResultColor(closestColorName);
-                // Display the resulting image
-                System.out.println("Circles found: " + finalCenters.size());
-            } else {
-                System.out.println("No circles found.");
             }
 
 
