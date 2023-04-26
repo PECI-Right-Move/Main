@@ -4,7 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +24,10 @@ public class Placa {
     private static final int NUM_COLS = 8;
     Pino[][] matrix = new Pino[16][8];
     public  List<Pino> lista;
+    public List<Point> leftmost ;
+    public List<Point> rightmost ;
+
+
 
     public Placa ( List<org.opencv.core.Point> pontos){
         List<Point> sortedCircles = pontos.stream()
@@ -26,15 +35,33 @@ public class Placa {
                 .map(point -> new Point(point.x, point.y)) // create Circle objects from Point objects
                 .collect(Collectors.toList());
 
-        List<Point> leftmost = eightLeftmostCircles(sortedCircles);
+        this.leftmost = eightleftmostCircles(sortedCircles);
         Collections.sort(leftmost, Comparator.comparingDouble(Point::getY));
 
-        List<Point> rightmost= eigthRightmostCircle(sortedCircles);
+        this.rightmost= eigthRightmostCircle(sortedCircles);
         Collections.sort(rightmost, Comparator.comparingDouble(Point::getY));
 
+        /*
+        System.out.println("rightmost");
+        for( int l =0; l<rightmost.size(); l++)
+        {
+            System.out.println(rightmost.get(l).getX()+" "+rightmost.get(l).getY());
+        }
+
+        System.out.println("Leftmost");
+        for( int l =0; l<leftmost.size(); l++)
+        {
+            System.out.println(leftmost.get(l).getX()+" "+leftmost.get(l).getY());
+        }
+
+         */
         for ( int i =0; i< rightmost.size(); i++)
         {
+            Collections.sort(leftmost, Comparator.comparingDouble(Point::getY));
+            Collections.sort(rightmost, Comparator.comparingDouble(Point::getY));
+
             Tuple eq= lineEquation(leftmost.get(i),rightmost.get(i));
+
             List<Integer> arr = getBestFitIndexes(eq,sortedCircles);
             List<Point> result = new ArrayList<>();
             for (int j : arr) {
@@ -53,13 +80,26 @@ public class Placa {
                             flag=true;
                             break;
                         }
-                        if (flag==true)
-                        {
-                            break;
-                        }
                     }
+                if (flag==true)
+                {
+                    break;
+                }
                 }
             }
+            /*
+            // iterate over the rows of the matrix
+            for(int l = 0; l < matrix.length; l++) {
+                // iterate over the columns of the matrix
+                for(int j = 0; j < matrix[l].length; j++) {
+                    // print each element of the matrix
+                    System.out.print(matrix[l][j] + " ");
+                }
+                // print a newline character to move to the next row
+                System.out.println();
+            }
+
+             */
         }
 
     }
@@ -79,48 +119,51 @@ public class Placa {
         }
     }
 
-    public List<Point> eightLeftmostCircles(List<Point> circles) {
-        int margin = 300;
-        List<Point> list = circles.stream()
-                .sorted(Comparator.comparingDouble(Point::getX))
-                .limit(8)
-                .collect(Collectors.toList());
-        int i = 9;
-        while (checkLine(list, margin) != 0) {
+    public static List<Point> eightleftmostCircles(List<Point> circles) {
+        int margin = 20;
+        List<Point> lista = new ArrayList<>();
+        circles.sort(Comparator.comparingDouble(Point::getX));
+        int n = circles.size();
+        for (int i = 0; i < 8; i++) {
+            lista.add(circles.get(i));
+        }
+        int i = 8;
+        while (checkLine(lista, margin) != 0) {
             try {
-                list.remove(checkLine(list, 10));
-                list.add(circles.stream()
-                        .sorted(Comparator.comparingDouble(Point::getX))
-                        .skip(i)
-                        .findFirst()
-                        .orElseThrow(IndexOutOfBoundsException::new));
-                i++;
+                int indexToRemove = checkLine(lista, margin);
+                lista.remove(indexToRemove);
+                circles.sort(Comparator.comparingDouble(Point::getX));
+                lista.add(0, circles.get(i));
+                i += 1;
             } catch (IndexOutOfBoundsException e) {
-                margin += 100;
-                list = eightLeftmostCircles(circles);
+                margin += 10;
+                System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                lista = eightleftmostCircles(circles);
             }
         }
-        return list;
+        return lista;
     }
 
+
     public static List<Point> eigthRightmostCircle(List<Point> circles) {
-        int margin = 300;
+        int margin = 20;
         List<Point> lista = new ArrayList<>();
         circles.sort(Comparator.comparingDouble(Point::getX));
         int n = circles.size();
         for (int i = n - 8; i < n; i++) {
             lista.add(circles.get(i));
         }
-        int i = 9;
+        int i = n-9;
         while (checkLine(lista, margin) != 0) {
             try {
-                int indexToRemove = checkLine(lista, 10);
+                int indexToRemove = checkLine(lista, margin);
                 lista.remove(indexToRemove);
                 circles.sort(Comparator.comparingDouble(Point::getX));
                 lista.add(circles.get(i));
-                i += 1;
+                i -= 1;
             } catch (IndexOutOfBoundsException e) {
-                margin += 100;
+                System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+                margin += 10;
                 lista = eigthRightmostCircle(circles);
             }
         }
@@ -193,6 +236,33 @@ public class Placa {
         return matrix;
     }
 
+    public static void drawLine(Mat image, double a, double b) {
+        // calculate the x and y coordinates of two points on the line
+        double x1 = 0;
+        double y1 = b;
+        double x2 = image.cols();
+        double y2 = a * x2 + b;
+
+        // create a new MatOfPoint2f with the two points
+        MatOfPoint2f points = new MatOfPoint2f(
+                new Point(x1, y1),
+                new Point(x2, y2)
+        );
+
+        // create a new Scalar with a random color
+        Scalar color = new Scalar(Math.random() * 256, Math.random() * 256, Math.random() * 256);
+
+        // use the OpenCV Imgproc.line function to draw the line on the image
+        Imgproc.line(image, points.toArray()[0], points.toArray()[1], color, (int) a);
+    }
+
+    public List<Point> getLeftmost() {
+        return leftmost;
+    }
+
+    public List<Point> getRightmost() {
+        return rightmost;
+    }
 
     public static class Tuple {
         private final double x;

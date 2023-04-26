@@ -175,13 +175,11 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                     }
                     Placa placa = new Placa(finalCenters);
 
-                    System.out.println("antes pino");
                     Pino[][] matrix = placa.getMatrix();
-                    System.out.println("depois");
 
-                    int pinoY = -1;
-                    int pinoX = -1;
-                    while (pinoX == -1 || pinoY == -1) {
+                    int pinoY = 0;
+                    int pinoX = 0;
+                    /*while (pinoX == -1 || pinoY == -1) {
                         if (pinoX == -1) {
                             pinoX = getPieceX();
                         }
@@ -189,13 +187,12 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                             pinoY = getPieceY();
                         }
                     }
-                    System.out.println("adsasdasdasaadsdadasdasdda");
 
+                     */
                     double x = matrix[pinoX][pinoY].x;
                     double y = matrix[pinoX][pinoY].y;
                     // Define a Scalar object to store the RGB values of the pixel
                     Scalar pixelRgb = new Scalar(0, 0, 0);
-                    System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkk");
                     // Check if the pixel coordinates are within the bounds of the image
                     if (x >= 0 && x < rgba.width() && y >= 0 && y < rgba.height()) {
                         // Get the pixel value at the specified location as a 1x1 matrix
@@ -208,13 +205,32 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                     double red = pixelRgb.val[0];
                     double green = pixelRgb.val[1];
                     double blue = pixelRgb.val[2];
-                    for (int i = 0; i < matrix.length; i++) {
-                        for (int j = 0; j < matrix[i].length; j++) {
-                            Imgproc.circle(rgba, new Point(matrix[i][j].x, matrix[i][j].y), 5, new Scalar(255, 0, 0), -1);
-                        }
-                    }
-                    System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
+                    for (int i = 0; i < matrix.length; i++) {
+                        Imgproc.circle(rgba, new Point(matrix[i][0].x, matrix[i][0].y), 5, new Scalar(255, 0, 0), -1);
+                    }
+                    for (int i = 0; i < matrix.length; i++) {
+                        Imgproc.circle(rgba, new Point(matrix[i][1].x, matrix[i][1].y), 5, new Scalar(255, 255, 0), -1);
+                    }
+                    for (int i = 0; i < matrix.length; i++) {
+                        Imgproc.circle(rgba, new Point(matrix[i][2].x, matrix[i][2].y), 5, new Scalar(255, 0, 255), -1);
+                    }
+                    for (int i = 0; i < matrix.length; i++) {
+                        Imgproc.circle(rgba, new Point(matrix[i][3].x, matrix[i][3].y), 5, new Scalar(255, 255, 255), -1);
+                    }
+                    for (int i = 0; i < matrix.length; i++) {
+                        Imgproc.circle(rgba, new Point(matrix[i][4].x, matrix[i][4].y), 5, new Scalar(0, 255, 0), -1);
+                    }
+                    /*
+                    List<Point> leftmost= placa.getLeftmost();
+                    List<Point> rightmost= placa.getRightmost();
+                    for (Point h:rightmost) {
+                        Imgproc.circle(rgba, h, 5, new Scalar(255, 0, 0), -1);
+                    }
+                    for( Point h:leftmost){
+                        Imgproc.circle(rgba, h, 5, new Scalar(255, 255, 255), -1);
+                    }
+                    */
                     // Define the color space to compare the pixel's RGB values against
                     Scalar[] colors = new Scalar[]{
                             new Scalar(255, 0, 0), // Red
@@ -231,7 +247,6 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                                 + Math.pow(green - colors[i].val[1], 2)
                                 + Math.pow(blue - colors[i].val[2], 2));
                     }
-                    System.out.println("xxxxxxxxxxiiiiiiiiiiiiiiiiiiiiiiii");
                     // Find the index of the closest color in the color space
                     int closestColorIndex = 0;
                     double closestColorDistance = distances[0];
@@ -266,10 +281,9 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                     }
 
                     // Print the name of the closest color to the log
-                    System.out.println("lasssssssssssssssssssss");
                     Log.e("MyApp", "The color is " + closestColorName);
 
-                    setResultColor(closestColorName);
+                    //setResultColor(closestColorName);
                     // Display the resulting image
                     System.out.println("Circles found: " + finalCenters.size());
                 }
