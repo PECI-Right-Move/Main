@@ -65,4 +65,12 @@ public class Point {
     public String toString() {
         return "{" + x + ", " + y + "}";
     }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getX() {
+        return x;
+    }
 }
