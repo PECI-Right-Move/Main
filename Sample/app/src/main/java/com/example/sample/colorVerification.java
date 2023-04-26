@@ -177,9 +177,9 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
 
                     Pino[][] matrix = placa.getMatrix();
 
-                    int pinoY = 0;
-                    int pinoX = 0;
-                    /*while (pinoX == -1 || pinoY == -1) {
+                    int pinoY = -1;
+                    int pinoX = -1;
+                    while (pinoX == -1 || pinoY == -1) {
                         if (pinoX == -1) {
                             pinoX = getPieceX();
                         }
@@ -187,8 +187,6 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                             pinoY = getPieceY();
                         }
                     }
-
-                     */
                     double x = matrix[pinoX][pinoY].x;
                     double y = matrix[pinoX][pinoY].y;
                     // Define a Scalar object to store the RGB values of the pixel
