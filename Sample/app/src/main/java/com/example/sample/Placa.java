@@ -1,160 +1,284 @@
 package com.example.sample;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Placa {
 
-
+    private static final int NUM_ROWS = 16;
+    private static final int NUM_COLS = 8;
     Pino[][] matrix = new Pino[16][8];
     public  List<Pino> lista;
-
-    public Placa(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-
-        double realXDistance = 25.5;
-        double realCornerDistance = 0.75;
-
-        double virtualXDisntaceBottom = x2 - x1;
-
-        double virtualXDisntaceTop= x3 -x4;
-
-        double virtualCornerBottomDistance = (realCornerDistance * virtualXDisntaceBottom) / realXDistance;
-
-        double virtualCornerTopDistance = (realCornerDistance * virtualXDisntaceTop) / realXDistance;
-
-        //Bottom
-        Point point1= new Point(x1 + virtualCornerBottomDistance,y1 + virtualCornerBottomDistance);
-        Point point2= new Point(x2 - virtualCornerBottomDistance ,y2 + virtualCornerBottomDistance );
-
-        //Top
-        Point point3= new Point(x3 - virtualCornerTopDistance,y3 - virtualCornerTopDistance);
-        Point point4= new Point(x4 + virtualCornerTopDistance ,y4 - virtualCornerTopDistance);
-
-
-        lista = this.getLegoNubs(point1,point2,point3,point4);
-
-        System.out.println("----------");
-        System.out.println(lista.size());
-
-
-        int k=0;
-        for(int i=0; i<matrix.length;i++)
-        {
-            for ( int j=0;j<matrix[0].length;j++)
-            {
-                if( k== lista.size())
-                {
-                    break;
-                }
-                matrix[i][j]=lista.get(k);
-                k++;
-            }
-        }
+    public List<Point> leftmost ;
+    public List<Point> rightmost ;
 
 
 
+    public Placa ( List<org.opencv.core.Point> pontos){
+        List<Point> sortedCircles = pontos.stream()
+                .sorted(Comparator.comparingDouble(point -> point.x))
+                .map(point -> new Point(point.x, point.y)) // create Circle objects from Point objects
+                .collect(Collectors.toList());
 
-    }
+        this.leftmost = eightleftmostCircles(sortedCircles);
+        Collections.sort(leftmost, Comparator.comparingDouble(Point::getY));
 
-    public static List<Pino> getLegoNubs(Point BL, Point BR, Point TR, Point TL) {
-        List<Pino> lista= new ArrayList<>();
+        this.rightmost= eigthRightmostCircle(sortedCircles);
+        Collections.sort(rightmost, Comparator.comparingDouble(Point::getY));
 
         /*
-        double disntacex= (point2.x-point1.x)/15;
-        double disntacey= (point4.y- point1.y)/7;
-        double disntacey2= (point4.x- point1.x)/7;
-        double m1 = (point2.y-point1.y)/( point2.x-point1.x);
-        double m2 = (point4.y-point1.y) / ( point4.x- point1.x);
-        double b2 = point1.y - m2 * point1.x;
-        double b1 = point1.y- m1* point1.x;
-        System.out.println(m1);
-        System.out.println(m2);
-        System.out.println(disntacey);
-        System.out.println((disntacex * 16 + point1.x) * m1 + b1-(disntacey * 8));
-        System.out.println((disntacex * 0 + point1.x) * m1 + b1-(disntacey * 0)) ;
-        System.out.println(disntacey2);
-        //y1=mx1+b
-        //Y2=mx2+b
-        for( int i = 0; i < 16; i++)
+        System.out.println("rightmost");
+        for( int l =0; l<rightmost.size(); l++)
         {
-            for ( int j=0; j<8;j++ )
-            {
-                double x = (disntacex * i + point1.x+disntacey2*j) * m1 + b1+(disntacey * j) ;
+            System.out.println(rightmost.get(l).getX()+" "+rightmost.get(l).getY());
+        }
 
-                double y = (disntacey * j + point1.y) * m2 + b2 ;
-                Pino k= new Pino(disntacex*i+ point1.x+disntacey2*j,x,"green");
-                lista.add(k);
-            }
+        System.out.println("Leftmost");
+        for( int l =0; l<leftmost.size(); l++)
+        {
+            System.out.println(leftmost.get(l).getX()+" "+leftmost.get(l).getY());
         }
 
          */
-
-        double x2 = BR.x - BL.x;
-        double x1= TR.x -TL.x;
-
-        double  increment_x1 = x1/15;
-        double increment_x2=x2/15;
-
-        List<Pino> pointsX1 = new ArrayList<>();
-        List<Pino> pointsX2 = new ArrayList<>();
-
-        List <Reta> retas= new ArrayList<>();
-
-        double m2 = (BL.y-BR.y)/( BL.x-BR.x);
-        double m1 = (TL.y-TR.y) / ( TL.x- TR.x);
-        double b1 = TL.y - m1 * TL.x;
-        double b2 = BL.y- m2* BL.x;
-
-        for ( int i =0 ; i<16; i++)
+        for ( int i =0; i< rightmost.size(); i++)
         {
-            double aux2 = ( BL.x+increment_x2*i );
-            double auy2= aux2*m2+b2;
+            Collections.sort(leftmost, Comparator.comparingDouble(Point::getY));
+            Collections.sort(rightmost, Comparator.comparingDouble(Point::getY));
 
-            double aux1 = ( TL.x+increment_x1*i );
-            double auy1= aux1*m1+b1;
+            Tuple eq= lineEquation(leftmost.get(i),rightmost.get(i));
 
+            List<Integer> arr = getBestFitIndexes(eq,sortedCircles);
+            List<Point> result = new ArrayList<>();
+            for (int j : arr) {
+                result.add(sortedCircles.get(j));
+            }
+            Collections.sort(result, Comparator.comparingDouble(Point::getX));
 
-            pointsX1.add(new Pino(aux1,auy1,"green"));
-            pointsX2.add( new  Pino( aux2,auy2,"green"));
+            for (int j = 0; j < result.size(); j++) {
+                Point k= result.get(j);
+                boolean flag = false;
+                for (int l = 0; l < 8; l++) {
+                    for (int m = 0; m < 16; m++) {
+                        if(matrix[m][l] == null)
+                        {
+                            matrix[m][l]=new Pino( k.x, k.y, "green");
+                            flag=true;
+                            break;
+                        }
+                    }
+                    if (flag==true)
+                    {
+                        break;
+                    }
+                }
+            }
+            /*
+            // iterate over the rows of the matrix
+            for(int l = 0; l < matrix.length; l++) {
+                // iterate over the columns of the matrix
+                for(int j = 0; j < matrix[l].length; j++) {
+                    // print each element of the matrix
+                    System.out.print(matrix[l][j] + " ");
+                }
+                // print a newline character to move to the next row
+                System.out.println();
+            }
 
+             */
         }
 
-        for( int i =0 ; i<pointsX1.size();i++)
-        {
-            Pino pino1= pointsX1.get(i);
-            Pino pino2 = pointsX2.get(i);
+    }
 
-            double m= ( pino1.y-pino2.y)/ ( pino1.x-pino2.x);
-            double b= pino1.y-m*pino1.x;
-
-            double increment= (pino1.y-pino2.y)/7;
-
-            Reta p= new Reta(m,b,increment);
-            retas.add(p);
+    public static boolean doCirclesCollide(Circles circle1, Circles circle2) {
+        double x1 = circle1.x;
+        double y1 =  circle1.y;
+        double r1 = circle1.r;
+        double x2 = circle2.x;
+        double y2 = circle2.y;
+        double r2 = circle2.r;
+        double distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        if (distance < r1 + r2) {
+            return true;  // Circles collide
+        } else {
+            return false;  // Circles do not collide
         }
+    }
 
-        for( int i = 0; i<retas.size(); i++)
-        {
-            for( int j=0; j<8; j++)
-            {
-                Pino pino1= pointsX1.get(i);
-                Pino pino2= pointsX2.get(i);
-                Reta reta= retas.get(i);
-                double auy = pino2.y+(reta.increment*j);
-                double aux =  (auy-reta.b)/reta.m;
-
-                lista.add ( new Pino ( aux,auy,"green"));
+    public static List<Point> eightleftmostCircles(List<Point> circles) {
+        int margin = 20;
+        List<Point> lista = new ArrayList<>();
+        circles.sort(Comparator.comparingDouble(Point::getX));
+        int n = circles.size();
+        for (int i = 0; i < 8; i++) {
+            lista.add(circles.get(i));
+        }
+        int i = 8;
+        while (checkLine(lista, margin) != 0) {
+            try {
+                int indexToRemove = checkLine(lista, margin);
+                lista.remove(indexToRemove);
+                circles.sort(Comparator.comparingDouble(Point::getX));
+                lista.add(0, circles.get(i));
+                i += 1;
+            } catch (IndexOutOfBoundsException e) {
+                margin += 10;
+                System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                lista = eightleftmostCircles(circles);
             }
         }
-
-
-
-
-
         return lista;
+    }
+
+
+    public static List<Point> eigthRightmostCircle(List<Point> circles) {
+        int margin = 20;
+        List<Point> lista = new ArrayList<>();
+        circles.sort(Comparator.comparingDouble(Point::getX));
+        int n = circles.size();
+        for (int i = n - 8; i < n; i++) {
+            lista.add(circles.get(i));
+        }
+        int i = n-9;
+        while (checkLine(lista, margin) != 0) {
+            try {
+                int indexToRemove = checkLine(lista, margin);
+                lista.remove(indexToRemove);
+                circles.sort(Comparator.comparingDouble(Point::getX));
+                lista.add(circles.get(i));
+                i -= 1;
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+                margin += 10;
+                lista = eigthRightmostCircle(circles);
+            }
+        }
+        return lista;
+    }
+    public static int checkLine(List<Point> circles, int margin) {
+        if (circles.size() < 3) {
+            return 0;
+        }
+        double x1 = circles.get(0).getX();
+        double y1 = circles.get(0).getY();
+        double x2 = circles.get(1).getX();
+        double slope;
+        double y2 = circles.get(1).getY();
+        if( x1-x2 ==0) { slope= 0;} else if ( y1==y2 ) {
+            slope= 1;
+        }
+        else{
+            slope = (y2 - y1) / (double) (x2 - x1);
+        }
+        for (int i = 2; i < circles.size(); i++) {
+            double x = circles.get(i).getX();
+            double y = circles.get(i).getY();
+            if (Math.abs(y - y1 - slope * (x - x1)) > margin) {
+                return 0;
+            }
+        }
+        return 1;
+    }
+
+
+    public static List<Integer> getBestFitIndexes(Tuple lineEq, List<Point> points) {
+        double a = lineEq.x;
+        double b = lineEq.y;
+        List<Tuple> distances = new ArrayList<>();
+        for (int i = 0; i < points.size(); i++) {
+            Point point = points.get(i);
+            double x = point.x;
+            double y = point.y;
+            double dist = Math.abs(a * x - y + b) / Math.sqrt(a * a + 1);
+            distances.add(new Tuple(i, dist));
+        }
+        distances.sort(Comparator.comparingDouble(Tuple::getY));
+        List<Integer> bestFitIndexes = new ArrayList<>();
+        for (int i = 0; i < 16; i++) {
+            Tuple tuple = distances.get(i);
+            bestFitIndexes.add((int) tuple.x);
+        }
+        return bestFitIndexes;
+    }
+
+    public static Tuple lineEquation(Point point1, Point  point2) {
+        double x1 = point1.x;
+        double y1 = point1.y;
+        double x2 = point2.x;
+        double y2 = point2.y;
+        double slope;
+        if (x1 == x2) {
+            slope = 0;
+        } else if (y1 == y2) {
+            slope = 1;
+        } else {
+            slope = (y2 - y1) / (x2 - x1);
+        }
+        double yIntercept = y1 - slope * x1;
+        return new Tuple(slope, yIntercept);
     }
 
     public Pino[][] getMatrix() {
         return matrix;
+    }
+
+    public static void drawLine(Mat image, double a, double b) {
+        // calculate the x and y coordinates of two points on the line
+        double x1 = 0;
+        double y1 = b;
+        double x2 = image.cols();
+        double y2 = a * x2 + b;
+
+        // create a new MatOfPoint2f with the two points
+        MatOfPoint2f points = new MatOfPoint2f(
+                new Point(x1, y1),
+                new Point(x2, y2)
+        );
+
+        // create a new Scalar with a random color
+        Scalar color = new Scalar(Math.random() * 256, Math.random() * 256, Math.random() * 256);
+
+        // use the OpenCV Imgproc.line function to draw the line on the image
+        Imgproc.line(image, points.toArray()[0], points.toArray()[1], color, (int) a);
+    }
+
+    public List<Point> getLeftmost() {
+        return leftmost;
+    }
+
+    public List<Point> getRightmost() {
+        return rightmost;
+    }
+
+    public static class Tuple {
+        private final double x;
+        private final double y;
+
+        public Tuple(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public double getX() {
+            return x;
+        }
+
+        public double getY() {
+            return y;
+        }
     }
 }
