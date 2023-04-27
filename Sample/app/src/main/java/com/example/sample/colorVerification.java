@@ -46,6 +46,8 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
     private boolean              mIsJavaCamera = true;
     private MenuItem             mItemSwitchCamera = null;
 
+    List<Pino> coloridos= new ArrayList<>();
+
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
@@ -133,6 +135,7 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
         Mat circles = new Mat();
         Imgproc.HoughCircles(img, circles, Imgproc.HOUGH_GRADIENT, 1, 20, 30, 30, 15, 40);
         if (circles.total()!=0) {
+
             // Convert the (x, y) coordinates and radius of the circles to integers
             int numCircles = (int) circles.total();
             Point[] circleCenters = new Point[numCircles];
@@ -165,8 +168,9 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 }
             }
             if (finalCenters.size()== 128) {
-                for (int i = 0; i < finalCenters.size(); i++) {
-                    Imgproc.circle(rgba, finalCenters.get(i), Math.round(finalRadii.get(i)), new Scalar(0, 255, 0), 2);
+
+                for( Pino pino: coloridos){
+                    Imgproc.circle(rgba, new Point(pino.x,pino.y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 255), 2);
                 }
                 Placa placa = new Placa(finalCenters);
 
