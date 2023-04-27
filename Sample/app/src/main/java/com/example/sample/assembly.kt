@@ -217,7 +217,7 @@ class assembly : AppCompatActivity() {
                         val matchingAssembly = instructionsList.find { it.assembly == codeAssembly }
 
                         val stepsWithCoords = matchingAssembly?.steps?.map { step ->
-                            "(${step.coordinates.x}, ${step.coordinates.y})"
+                            "(${step.coordinatesA.x}, ${step.coordinatesA.y})"
                         } ?: emptyList()
 
                         val piecesWithCoords = piecesIds.mapIndexed { index, pieceId ->
@@ -381,7 +381,10 @@ class assembly : AppCompatActivity() {
         if (instruction != null) {
             Toast.makeText(this@assembly, "Verificated ${instruction.assembly}", Toast.LENGTH_SHORT).show()
             Log.e("MYAPP", "Before")
-            switchActivity(instruction.steps[index].coordinates.x, instruction.steps[index].coordinates.y, instruction.steps[index].color,
+
+
+            switchActivity(instruction.steps[index].coordinatesA.x, instruction.steps[index].coordinatesA.y,instruction.steps[index].coordinatesB.x,instruction.steps[index].coordinatesB.y, instruction.steps[index].color,
+
                 object : ColorSelectedListener {
                     override fun onColorSelected(color: String) {
                         Log.e("MYAPP", "After")
@@ -414,14 +417,20 @@ class assembly : AppCompatActivity() {
         }
     }
 
-    fun switchActivity(x: Int, y: Int, color: String , colorSelectedListener: ColorSelectedListener) {
+    fun switchActivity(xA: Int, yA: Int,xB: Int, yB: Int,  color: String , colorSelectedListener: ColorSelectedListener) {
         this.colorSelectedListener = colorSelectedListener
         val intent = Intent(this, colorVerification::class.java)
-        intent.putExtra("pieceX", x)
-        intent.putExtra("pieceY", y)
+        intent.putExtra("pieceX", xA)
+        intent.putExtra("pieceY", yA)
 
-        Log.e("MyApp", "cor e 0$x")
-        Log.e("MyApp", "cor e 0$y")
+        intent.putExtra("pieceX", xB)
+        intent.putExtra("pieceY", yB)
+
+        Log.e("MyApp", "cor e 0$xA")
+        Log.e("MyApp", "cor e 0$yA")
+
+        Log.e("MyApp", "cor e 0$xB")
+        Log.e("MyApp", "cor e 0$yB")
         intent.putExtra("Colour_From_Assembly", color)
         Log.i("MYAPP", "Before")
         colorVerificationLauncher.launch(intent)

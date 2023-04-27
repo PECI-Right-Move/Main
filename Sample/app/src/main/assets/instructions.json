@@ -5,22 +5,26 @@
         "idPiece":"3437B",
         "idStep": "a12345",
         "color":"blue",
-        "coordinates": {"x":2, "y":2}},
+        "coordinatesA": {"x":2, "y":2},
+        "coordinatesB": {"x":3, "y":3}},
       {
         "idPiece":"3437O",
         "idStep": "b12345",
         "color":"orange",
-        "coordinates": {"x":4, "y":2}},
+        "coordinatesA": {"x":4, "y":2},
+        "coordinatesB": {"x":5, "y":3}},
       {
         "idPiece":"76371R",
         "idStep": "c12345",
         "color":"red",
-        "coordinates": {"x":1, "y":2}},
+        "coordinatesA": {"x":1, "y":2},
+        "coordinatesB": {"x":1, "y":3}},
       {
         "idPiece":"3011W",
         "idStep": "d12345",
         "color":"white",
-        "coordinates": {"x":6, "y":2}}
+        "coordinates": {"x":6, "y":2},
+        "coordinatesA": {"x":9, "y":3}}
     ]},
   { "assembly":"23456",
     "steps":[

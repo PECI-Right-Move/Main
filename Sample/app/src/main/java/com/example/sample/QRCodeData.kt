@@ -16,7 +16,8 @@ data class Step(
     val idPiece: String,
     val idStep: String,
     val color: String,
-    val coordinates: Dimensions
+    val coordinatesA: Dimensions,
+    val coordinatesB: Dimensions
 )
 
 data class Instruction(
