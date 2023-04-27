@@ -169,9 +169,7 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
             }
             if (finalCenters.size()== 128) {
 
-                for( Pino pino: coloridos){
-                    Imgproc.circle(rgba, new Point(pino.x,pino.y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 255), 2);
-                }
+
                 Placa placa = new Placa(finalCenters);
 
                 Pino[][] matrix = placa.getMatrix();
@@ -179,9 +177,11 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 int pinoX = getPieceX();
                 int pinoY = getPieceY();
                 boolean gotCord = true;
+                String getColor = "noColor";
                 if (pinoX == -1 && pinoY == -1) {
                     pinoY = 0;
                     pinoX = 0;
+                    getColor = getPieceColor();
                     gotCord = false;
                 }
 
@@ -259,11 +259,17 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                         break;
                 }
 
+                //draw colors
+                if(getColor != "noColor"){
+                    for( Pino pino: coloridos){
+                        Imgproc.circle(rgba, new Point(x,y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 255), 2);
+                    }
+                }
                 // Print the name of the closest color to the log
 
                 Log.e("MyApp", "The color is " + closestColorName);
 
-                if (gotCord) {
+                if (gotCord && closestColorName.toLowerCase().equals((getColor))) {
                     setResultColor(closestColorName);
                 }
 
@@ -285,6 +291,12 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
         Intent intent = getIntent();
         int pieceY = intent.getIntExtra("pieceY", -1);
         return pieceY;
+    }
+
+    private String getPieceColor() {
+        Intent intent = getIntent();
+        String color = intent.getStringExtra("color");
+        return color;
     }
 
     private void setResultColor(String color) {

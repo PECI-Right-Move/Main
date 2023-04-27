@@ -125,9 +125,6 @@ class assembly : AppCompatActivity() {
     }
 
 
-
-
-
     override fun onResume() {
         super.onResume()
         if (scanning) {
@@ -384,7 +381,7 @@ class assembly : AppCompatActivity() {
         if (instruction != null) {
             Toast.makeText(this@assembly, "Verificated ${instruction.assembly}", Toast.LENGTH_SHORT).show()
             Log.e("MYAPP", "Before")
-            switchActivity(instruction.steps[index].coordinates.x, instruction.steps[index].coordinates.y,
+            switchActivity(instruction.steps[index].coordinates.x, instruction.steps[index].coordinates.y, instruction.steps[index].color,
                 object : ColorSelectedListener {
                     override fun onColorSelected(color: String) {
                         Log.e("MYAPP", "After")
@@ -417,11 +414,12 @@ class assembly : AppCompatActivity() {
         }
     }
 
-    fun switchActivity(x: Int, y: Int, colorSelectedListener: ColorSelectedListener) {
+    fun switchActivity(x: Int, y: Int, color: String , colorSelectedListener: ColorSelectedListener) {
         this.colorSelectedListener = colorSelectedListener
         val intent = Intent(this, colorVerification::class.java)
         intent.putExtra("pieceX", x)
         intent.putExtra("pieceY", y)
+        intent.putExtra("color", color)
         Log.i("MYAPP", "Before")
         colorVerificationLauncher.launch(intent)
         Log.i("MYAPP", "After")
