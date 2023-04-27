@@ -33,7 +33,9 @@ import java.sql.Time
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.schedule
 import kotlin.coroutines.Continuation
+import kotlin.system.exitProcess
 
 private const val  CAMERA_REQUEST_CODE = 101
 
@@ -121,9 +123,6 @@ class assembly : AppCompatActivity() {
 
         }
     }
-
-
-
 
 
     override fun onResume() {
@@ -274,7 +273,6 @@ class assembly : AppCompatActivity() {
     }
 
     private fun secondcodeScanner() {
-        codeScanner.startPreview()
         Log.e("MYAPP", "Entrou Second")
 
         codeScanner.apply {
@@ -286,7 +284,9 @@ class assembly : AppCompatActivity() {
             isAutoFocusEnabled = true
             isFlashEnabled = false
 
+            codeScanner.startPreview()
 
+            Timer().schedule(500){
 
             codeScanner.decodeCallback = DecodeCallback { result ->
                 runOnUiThread {
@@ -364,6 +364,7 @@ class assembly : AppCompatActivity() {
                     }
                 }
             }
+            }
             errorCallback = ErrorCallback { error ->
                 runOnUiThread {
                     Log.e("Main", "Camera initialization error: ${error.message}")
@@ -380,7 +381,7 @@ class assembly : AppCompatActivity() {
         if (instruction != null) {
             Toast.makeText(this@assembly, "Verificated ${instruction.assembly}", Toast.LENGTH_SHORT).show()
             Log.e("MYAPP", "Before")
-            switchActivity(instruction.steps[index].coordinates.x, instruction.steps[index].coordinates.y,
+            switchActivity(instruction.steps[index].coordinates.x, instruction.steps[index].coordinates.y, instruction.steps[index].color,
                 object : ColorSelectedListener {
                     override fun onColorSelected(color: String) {
                         Log.e("MYAPP", "After")
@@ -408,15 +409,20 @@ class assembly : AppCompatActivity() {
             val data = result.data
             val color = data?.getStringExtra("color").toString()
             Log.i("MYAPp", "$color color Selected")
+            Toast.makeText(this, "Color found : $color" , Toast.LENGTH_SHORT).show()
             colorSelectedListener?.onColorSelected(color)
         }
     }
 
-    fun switchActivity(x: Int, y: Int, colorSelectedListener: ColorSelectedListener) {
+    fun switchActivity(x: Int, y: Int, color: String , colorSelectedListener: ColorSelectedListener) {
         this.colorSelectedListener = colorSelectedListener
         val intent = Intent(this, colorVerification::class.java)
         intent.putExtra("pieceX", x)
         intent.putExtra("pieceY", y)
+
+        Log.e("MyApp", "cor e 0$x")
+        Log.e("MyApp", "cor e 0$y")
+        intent.putExtra("Colour_From_Assembly", color)
         Log.i("MYAPP", "Before")
         colorVerificationLauncher.launch(intent)
         Log.i("MYAPP", "After")

@@ -46,6 +46,8 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
     private boolean              mIsJavaCamera = true;
     private MenuItem             mItemSwitchCamera = null;
 
+    List<Pino> coloridos= new ArrayList<>();
+
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
@@ -127,166 +129,151 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        Mat rgba = inputFrame.rgba();
-        Mat gray = inputFrame.gray();
-        List<Mat> corners = new ArrayList<>();
-        Mat ids = new Mat();
-        Dictionary dictionary = Objdetect.getPredefinedDictionary(Objdetect.DICT_5X5_50);
-        DetectorParameters detectorParameters=new DetectorParameters();
-        RefineParameters refineParameters =new RefineParameters();
-        ArucoDetector arucoDetector=new ArucoDetector(dictionary,detectorParameters,refineParameters);
-        arucoDetector.detectMarkers(gray,corners,ids);
+        Mat img = inputFrame.gray();
+        Mat rgba =inputFrame.rgba();
+        // Apply Hough transform to detect circles
+        Mat circles = new Mat();
+        Imgproc.HoughCircles(img, circles, Imgproc.HOUGH_GRADIENT, 1, 20, 30, 30, 15, 40);
+        if (circles.total()!=0) {
 
-        // Create a HashMap to store Aruco IDs and their corresponding corners
-        HashMap<Integer, List<double[]>> dictCantos = new HashMap<>();
-
-        // Loop through the detected markers and add their corner points to the HashMap
-        for (int i = 0; i < ids.rows(); i++) {
-            int id = (int) ids.get(i, 0)[0];
-            List<double[]> cornerList = new ArrayList<>();
-            for (int j = 0; j < 4; j++) {
-                double[] corner = corners.get(i).get(0, j);
-                cornerList.add(corner);
-            }
-            dictCantos.put(id, cornerList);
-        }
-
-        // Check if the size of dictCantos is 4 and print it
-        if (dictCantos.size() == 4) {
-            //System.out.println("dictCantos:");
-
-            //for (Map.Entry<Integer, List<double[]>> entry : dictCantos.entrySet()) {
-            //int key = entry.getKey();
-            //List<double[]> value = entry.getValue();
-            //System.out.println("  Marker " + key + " corner points:");
-            //for (double[] corner : value) {
-            //System.out.println("    (" + corner[0] + ", " + corner[1] + ")");
-            // }
-            //}
-            // Loop through the detected markers and add their corner points to the HashMap
-            for (int i = 0; i < ids.rows(); i++) {
-                int id = (int) ids.get(i, 0)[0];
-                List<double[]> cornerList = new ArrayList<>();
-                for (int j = 0; j < 4; j++) {
-                    double[] corner = corners.get(i).get(0, j);
-                    cornerList.add(corner);
-                }
-                dictCantos.put(id, cornerList);
+            // Convert the (x, y) coordinates and radius of the circles to integers
+            int numCircles = (int) circles.total();
+            Point[] circleCenters = new Point[numCircles];
+            float[] circleRadii = new float[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                double[] circleData = circles.get(0, i);
+                circleCenters[i] = new Point(Math.round(circleData[0]), Math.round(circleData[1]));
+                circleRadii[i] = (float) Math.round(circleData[2]);
             }
 
-// Get the coordinates of the corners you want to print
-            double[] corner1 = dictCantos.get(1).get(2);
-            double[] corner2 = dictCantos.get(2).get(3);
-            double[] corner3 = dictCantos.get(3).get(0);
-            double[] corner4 = dictCantos.get(4).get(1);
-
-// Print the coordinates
-            System.out.println(" marker 1: (" + corner1[0] + ", " + corner1[1] + ")");
-            System.out.println("marker 2: (" + corner2[0] + ", " + corner2[1] + ")");
-            System.out.println("marker 3: (" + corner3[0] + ", " + corner3[1] + ")");
-            System.out.println(" marker 4: (" + corner4[0] + ", " + corner4[1] + ")");
-
-            // Draw a red dot at each of the four coordinates
-            Imgproc.circle(rgba, new Point(corner1[0], corner1[1]), 5, new Scalar(255, 255, 0), -1);
-            Imgproc.circle(rgba, new Point(corner2[0], corner2[1]), 5, new Scalar(255, 255, 0), -1);
-            Imgproc.circle(rgba, new Point(corner3[0], corner3[1]), 5, new Scalar(255, 255, 0), -1);
-            Imgproc.circle(rgba, new Point(corner4[0], corner4[1]), 5, new Scalar(255, 255, 0), -1);
-            Placa placa =new Placa(corner1[0], corner1[1],corner2[0], corner2[1],corner3[0], corner3[1],corner4[0], corner4[1]);
-
-
-            Pino[][] matrix = placa.getMatrix();
-
-            int pinoY = -1;
-            int pinoX = -1;
-            while(pinoX == -1 || pinoY == -1){
-                if(pinoX == -1){
-                    pinoX = getPieceX();
+            // Filter out smaller circles contained within larger ones
+            List<Integer> sortedIndices = new ArrayList<>();
+            for (int i = 0; i < numCircles; i++) {
+                sortedIndices.add(i);
+            }
+            Collections.sort(sortedIndices, (a, b) -> Float.compare(circleRadii[b], circleRadii[a]));
+            List<Point> finalCenters = new ArrayList<>();
+            List<Float> finalRadii = new ArrayList<>();
+            for (int i = 0; i < numCircles; i++) {
+                boolean isContained = false;
+                for (int j = i + 1; j < numCircles; j++) {
+                    if (doCirclesCollide(circleCenters[i], circleRadii[i], circleCenters[j], circleRadii[j])) {
+                        isContained = true;
+                        break;
+                    }
                 }
-                if (pinoY == -1){
-                    pinoY = getPieceY();
+                if (!isContained) {
+                    finalCenters.add(circleCenters[i]);
+                    finalRadii.add(circleRadii[i]);
                 }
             }
+            if (finalCenters.size()== 128) {
+                System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
 
-            double x = matrix[pinoX][pinoY].x;
-            double y = matrix[pinoX][pinoY].y;
-            // Define a Scalar object to store the RGB values of the pixel
-            Scalar pixelRgb = new Scalar(0, 0, 0);
+                Placa placa = new Placa(finalCenters);
 
-            // Check if the pixel coordinates are within the bounds of the image
-            if (x >= 0 && x < rgba.width() && y >= 0 && y < rgba.height()) {
-                // Get the pixel value at the specified location as a 1x1 matrix
-                Mat pixelMat = rgba.submat((int)y, (int)y + 1, (int)x, (int)x + 1);
+                Pino[][] matrix = placa.getMatrix();
 
-                // Convert the 1x1 matrix to a Scalar object representing the RGB values of the pixel
-                pixelRgb = new Scalar(pixelMat.get(0, 0));
-            }
-
-            double red = pixelRgb.val[0];
-            double green = pixelRgb.val[1];
-            double blue = pixelRgb.val[2];
-
-            for( int i=0; i<matrix.length;i++ ){
-                for (int j =0; j<matrix[i].length;j++){
-                    Imgproc.circle(rgba, new Point(matrix[i][j].x, matrix[i][j].y), 5, new Scalar(255, 0, 0), -1);
+                int pinoX = getPieceX();
+                int pinoY = getPieceY();
+                boolean gotCord = true;
+                String getColor = "noColor";
+                if (pinoX == -1 && pinoY == -1) {
+                    pinoY = 0;
+                    pinoX = 0;
+                    gotCord = false;
                 }
-            }
-
-
-            // Define the color space to compare the pixel's RGB values against
-            Scalar[] colors = new Scalar[] {
-                    new Scalar(255, 0, 0), // Red
-                    new Scalar(255, 255, 0), // Yellow
-                    new Scalar(0, 255, 0), // Green
-                    new Scalar(0, 0, 255), // Blue
-                    new Scalar(255, 255, 255), // White
-            };
-
-            // Calculate the Euclidean distance between the pixel's RGB values and each color in the color space
-            double[] distances = new double[colors.length];
-            for (int i = 0; i < colors.length; i++) {
-                distances[i] = Math.sqrt(Math.pow(red - colors[i].val[0], 2)
-                        + Math.pow(green - colors[i].val[1], 2)
-                        + Math.pow(blue - colors[i].val[2], 2));
-            }
-
-            // Find the index of the closest color in the color space
-            int closestColorIndex = 0;
-            double closestColorDistance = distances[0];
-            for (int i = 1; i < distances.length; i++) {
-                if (distances[i] < closestColorDistance) {
-                    closestColorIndex = i;
-                    closestColorDistance = distances[i];
+                else{getColor = getPieceColor();
                 }
+
+                double x = matrix[pinoX][pinoY].x;
+                double y = matrix[pinoX][pinoY].y;
+                // Define a Scalar object to store the RGB values of the pixel
+                Scalar pixelRgb = new Scalar(0, 0, 0);
+
+                // Check if the pixel coordinates are within the bounds of the image
+                if (x >= 0 && x < rgba.width() && y >= 0 && y < rgba.height()) {
+                    // Get the pixel value at the specified location as a 1x1 matrix
+                    Mat pixelMat = rgba.submat((int) y, (int) y + 1, (int) x, (int) x + 1);
+
+                    // Convert the 1x1 matrix to a Scalar object representing the RGB values of the pixel
+                    pixelRgb = new Scalar(pixelMat.get(0, 0));
+                }
+
+                double red = pixelRgb.val[0];
+                double green = pixelRgb.val[1];
+                double blue = pixelRgb.val[2];
+
+
+
+                // Define the color space to compare the pixel's RGB values against
+                Scalar[] colors = new Scalar[]{
+                        new Scalar(255, 0, 0), // Red
+                        new Scalar(255, 255, 0), // Yellow
+                        new Scalar(0, 255, 0), // Green
+                        new Scalar(0, 0, 255), // Blue
+                        new Scalar(255, 255, 255), // White
+                        new Scalar(255, 128, 0), // Orange
+                };
+
+                // Calculate the Euclidean distance between the pixel's RGB values and each color in the color space
+                double[] distances = new double[colors.length];
+                for (int i = 0; i < colors.length; i++) {
+                    distances[i] = Math.sqrt(Math.pow(red - colors[i].val[0], 2)
+                            + Math.pow(green - colors[i].val[1], 2)
+                            + Math.pow(blue - colors[i].val[2], 2));
+                }
+
+                // Find the index of the closest color in the color space
+                int closestColorIndex = 0;
+                double closestColorDistance = distances[0];
+                for (int i = 1; i < distances.length; i++) {
+                    if (distances[i] < closestColorDistance) {
+                        closestColorIndex = i;
+                        closestColorDistance = distances[i];
+                    }
+                }
+
+                // Get the name of the closest color
+                String closestColorName;
+                switch (closestColorIndex) {
+                    case 0:
+                        closestColorName = "Red";
+                        break;
+                    case 1:
+                        closestColorName = "Yellow";
+                        break;
+                    case 2:
+                        closestColorName = "Green";
+                        break;
+                    case 3:
+                        closestColorName = "Blue";
+                        break;
+                    case 4:
+                        closestColorName = "White";
+                        break;
+                    case 5:
+                        closestColorName = "Orange";
+                        break;
+                    default:
+                        closestColorName = "Unknown";
+                        break;
+                }
+
+                //draw colors
+                if(!getColor.equals("noColor")){
+                    Imgproc.circle(rgba, new Point(x,y), Math.round(finalRadii.get(0)), new Scalar(0, 0, 0), 2);
+                }
+                // Print the name of the closest color to the log
+                Log.e("MyApp", " dasdasd " + getColor);
+                Log.e("MyApp", "The color is " + closestColorName);
+
+                if (gotCord && closestColorName.toLowerCase().equals((getColor))) {
+                    setResultColor(closestColorName);
+                }
+
             }
 
-            // Get the name of the closest color
-            String closestColorName;
-            switch (closestColorIndex) {
-                case 0:
-                    closestColorName = "Red";
-                    break;
-                case 1:
-                    closestColorName = "Yellow";
-                    break;
-                case 2:
-                    closestColorName = "Green";
-                    break;
-                case 3:
-                    closestColorName = "Blue";
-                    break;
-                case 4:
-                    closestColorName = "White";
-                    break;
-                default:
-                    closestColorName = "Unknown";
-                    break;
-            }
-
-            // Print the name of the closest color to the log
-
-            Log.e("MyApp", "The color is " + closestColorName);
-
-            setResultColor(closestColorName);
 
         }
 
@@ -305,11 +292,23 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
         return pieceY;
     }
 
+    private String getPieceColor() {
+        Intent intent = getIntent();
+        String color = intent.getStringExtra("Colour_From_Assembly");
+        return color;
+    }
+
     private void setResultColor(String color) {
         Intent intent = new Intent();
         intent.putExtra("color", color);
         setResult(Activity.RESULT_OK, intent);
         finish();
+    }
+
+    private static boolean doCirclesCollide(Point center1, float radius1, Point center2, float radius2) {
+        double distance = Math.sqrt(Math.pow(center2.x - center1.x, 2) + Math.pow(center2.y - center1.y, 2));
+        if (distance<radius1+radius2) return  true;
+        else return false  ;
     }
 
 }

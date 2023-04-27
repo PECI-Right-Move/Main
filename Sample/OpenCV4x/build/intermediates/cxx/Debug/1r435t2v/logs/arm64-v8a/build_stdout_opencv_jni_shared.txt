@@ -1,2 +1,2 @@
-ninja: Entering directory `C:\Users\LEGION\Documents\GitHub\Main\Sample\OpenCV4x\.cxx\Debug\1r435t2v\arm64-v8a'
+ninja: Entering directory `C:\Users\ricardo\Desktop\Uni\2sem\PECI\Main\Sample\OpenCV4x\.cxx\Debug\1r435t2v\arm64-v8a'
 ninja: no work to do.
