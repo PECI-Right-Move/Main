@@ -419,7 +419,10 @@ class assembly : AppCompatActivity() {
         val intent = Intent(this, colorVerification::class.java)
         intent.putExtra("pieceX", x)
         intent.putExtra("pieceY", y)
-        intent.putExtra("color", color)
+
+        Log.e("MyApp", "cor e 0$x")
+        Log.e("MyApp", "cor e 0$y")
+        intent.putExtra("Colour_From_Assembly", color)
         Log.i("MYAPP", "Before")
         colorVerificationLauncher.launch(intent)
         Log.i("MYAPP", "After")

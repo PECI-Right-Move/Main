@@ -168,7 +168,7 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 }
             }
             if (finalCenters.size()== 128) {
-
+                System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
 
                 Placa placa = new Placa(finalCenters);
 
@@ -181,8 +181,9 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 if (pinoX == -1 && pinoY == -1) {
                     pinoY = 0;
                     pinoX = 0;
-                    getColor = getPieceColor();
                     gotCord = false;
+                }
+                else{getColor = getPieceColor();
                 }
 
                 double x = matrix[pinoX][pinoY].x;
@@ -260,13 +261,11 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 }
 
                 //draw colors
-                if(getColor != "noColor"){
-                    for( Pino pino: coloridos){
-                        Imgproc.circle(rgba, new Point(x,y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 255), 2);
-                    }
+                if(!getColor.equals("noColor")){
+                    Imgproc.circle(rgba, new Point(x,y), Math.round(finalRadii.get(0)), new Scalar(0, 0, 0), 2);
                 }
                 // Print the name of the closest color to the log
-
+                Log.e("MyApp", " dasdasd " + getColor);
                 Log.e("MyApp", "The color is " + closestColorName);
 
                 if (gotCord && closestColorName.toLowerCase().equals((getColor))) {
@@ -295,7 +294,7 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
 
     private String getPieceColor() {
         Intent intent = getIntent();
-        String color = intent.getStringExtra("color");
+        String color = intent.getStringExtra("Colour_From_Assembly");
         return color;
     }
 
