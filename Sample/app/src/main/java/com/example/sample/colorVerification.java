@@ -168,108 +168,69 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 }
             }
             if (finalCenters.size()== 128) {
-                System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
+
 
                 Placa placa = new Placa(finalCenters);
 
                 Pino[][] matrix = placa.getMatrix();
 
-                int pinoX = getPieceX();
-                int pinoY = getPieceY();
+                //get pines coord
+                int pinoXA = getPieceXA();
+                int pinoYA = getPieceYA();
+                int pinoXB = getPieceXB();
+                int pinoYB = getPieceYB();
                 boolean gotCord = true;
                 String getColor = "noColor";
-                if (pinoX == -1 && pinoY == -1) {
-                    pinoY = 0;
-                    pinoX = 0;
+                //if didnt came from another intent so with defautlt value i put a random pin
+                if (pinoXA == -1 && pinoYA == -1) {
+                    pinoYA = 0;
+                    pinoXA = 0;
+                    pinoYB = 0;
+                    pinoXB = 0;
                     gotCord = false;
                 }
-                else{getColor = getPieceColor();
-                }
-
-                double x = matrix[pinoX][pinoY].x;
-                double y = matrix[pinoX][pinoY].y;
-                // Define a Scalar object to store the RGB values of the pixel
-                Scalar pixelRgb = new Scalar(0, 0, 0);
-
-                // Check if the pixel coordinates are within the bounds of the image
-                if (x >= 0 && x < rgba.width() && y >= 0 && y < rgba.height()) {
-                    // Get the pixel value at the specified location as a 1x1 matrix
-                    Mat pixelMat = rgba.submat((int) y, (int) y + 1, (int) x, (int) x + 1);
-
-                    // Convert the 1x1 matrix to a Scalar object representing the RGB values of the pixel
-                    pixelRgb = new Scalar(pixelMat.get(0, 0));
-                }
-
-                double red = pixelRgb.val[0];
-                double green = pixelRgb.val[1];
-                double blue = pixelRgb.val[2];
+                else
+                    getColor = getPieceColor();
 
 
+                Point pinoA = new Point(matrix[pinoXA][pinoYA].x, matrix[pinoXA][pinoYA].y);
+                Point pinoB = new Point(matrix[pinoXB][pinoYB].x, matrix[pinoXB][pinoYB].y);
 
-                // Define the color space to compare the pixel's RGB values against
-                Scalar[] colors = new Scalar[]{
-                        new Scalar(255, 0, 0), // Red
-                        new Scalar(255, 255, 0), // Yellow
-                        new Scalar(0, 255, 0), // Green
-                        new Scalar(0, 0, 255), // Blue
-                        new Scalar(255, 255, 255), // White
-                        new Scalar(255, 128, 0), // Orange
-                };
+                String closestColorNamePineA = guessColor(rgba, pinoA);
+                String closestColorNamePineB = guessColor(rgba, pinoB);
 
-                // Calculate the Euclidean distance between the pixel's RGB values and each color in the color space
-                double[] distances = new double[colors.length];
-                for (int i = 0; i < colors.length; i++) {
-                    distances[i] = Math.sqrt(Math.pow(red - colors[i].val[0], 2)
-                            + Math.pow(green - colors[i].val[1], 2)
-                            + Math.pow(blue - colors[i].val[2], 2));
-                }
-
-                // Find the index of the closest color in the color space
-                int closestColorIndex = 0;
-                double closestColorDistance = distances[0];
-                for (int i = 1; i < distances.length; i++) {
-                    if (distances[i] < closestColorDistance) {
-                        closestColorIndex = i;
-                        closestColorDistance = distances[i];
-                    }
-                }
-
-                // Get the name of the closest color
-                String closestColorName;
-                switch (closestColorIndex) {
-                    case 0:
-                        closestColorName = "Red";
-                        break;
-                    case 1:
-                        closestColorName = "Yellow";
-                        break;
-                    case 2:
-                        closestColorName = "Green";
-                        break;
-                    case 3:
-                        closestColorName = "Blue";
-                        break;
-                    case 4:
-                        closestColorName = "White";
-                        break;
-                    case 5:
-                        closestColorName = "Orange";
-                        break;
-                    default:
-                        closestColorName = "Unknown";
-                        break;
-                }
 
                 //draw colors
                 if(!getColor.equals("noColor")){
-                    Imgproc.circle(rgba, new Point(x,y), Math.round(finalRadii.get(0)), new Scalar(0, 0, 0), 2);
-                }
-                // Print the name of the closest color to the log
-                Log.e("MyApp", " dasdasd " + getColor);
-                Log.e("MyApp", "The color is " + closestColorName);
+                    for( int i = pinoXA; i<=pinoXB;i++){
+                            for( int j = pinoYA; j<=pinoYB;j++)
+                            {
 
-                if (gotCord && closestColorName.toLowerCase().equals((getColor))) {
-                    setResultColor(closestColorName);
+                                Imgproc.circle(rgba, new Point( matrix[i][j].x,matrix[i][j].y ), Math.round(finalRadii.get(0)), new Scalar(255, 255, 255), 2);
+                            }
+                    }
+                }
+
+                if( gotCord) {
+                    for (int i = 0; i < 16; i++) {
+                        Imgproc.circle(rgba, new Point(matrix[i][0].x, matrix[i][0].y), Math.round(finalRadii.get(0)), new Scalar(0, 255, 255), 2);
+                        Imgproc.circle(rgba, new Point(matrix[i][1].x, matrix[i][1].y), Math.round(finalRadii.get(0)), new Scalar(255, 0, 255), 2);
+                        Imgproc.circle(rgba, new Point(matrix[i][2].x, matrix[i][2].y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 0), 2);
+                        Imgproc.circle(rgba, new Point(matrix[i][3].x, matrix[i][3].y), Math.round(finalRadii.get(0)), new Scalar(0, 0, 255), 2);
+                        Imgproc.circle(rgba, new Point(matrix[i][4].x, matrix[i][4].y), Math.round(finalRadii.get(0)), new Scalar(255, 0, 0), 2);
+                        Imgproc.circle(rgba, new Point(matrix[i][5].x, matrix[i][5].y), Math.round(finalRadii.get(0)), new Scalar(0, 0, 0), 2);
+                        Imgproc.circle(rgba, new Point(matrix[i][6].x, matrix[i][6].y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 255), 2);
+                    }
+                }
+
+
+
+                // Print the name of the closest color to the log
+
+                Log.e("MyApp", "The color is " + closestColorNamePineA);
+
+                if (gotCord && closestColorNamePineA.equalsIgnoreCase((getColor)) && closestColorNamePineB.equalsIgnoreCase((getColor))) {
+                    setResultColor(closestColorNamePineA);
                 }
 
             }
@@ -280,33 +241,107 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
         return rgba;
     }
 
+    private String guessColor(Mat rgba, Point pine){
+        double x = pine.x;
+        double y = pine.y;
+
+        // Define a Scalar object to store the RGB values of the pixel
+        Scalar pixelRgb = new Scalar(0, 0, 0);
+        // Check if the pixel coordinates are within the bounds of the image
+        if (x >= 0 && x < rgba.width() && y >= 0 && y < rgba.height()) {
+            // Get the pixel value at the specified location as a 1x1 matrix
+            Mat pixelMat = rgba.submat((int) y, (int) y + 1, (int) x, (int) x + 1);
+
+            // Convert the 1x1 matrix to a Scalar object representing the RGB values of the pixel
+            pixelRgb = new Scalar(pixelMat.get(0, 0));
+        }
+
+        double red = pixelRgb.val[0];
+        double green = pixelRgb.val[1];
+        double blue = pixelRgb.val[2];
+
+
+
+        // Define the color space to compare the pixel's RGB values against
+        Scalar[] colors = new Scalar[]{
+                new Scalar(255, 0, 0), // Red
+                new Scalar(255, 255, 0), // Yellow
+                new Scalar(0, 255, 0), // Green
+                new Scalar(0, 0, 255), // Blue
+                new Scalar(255, 255, 255), // White
+                new Scalar(255, 128, 0), // Orange
+        };
+
+        // Calculate the Euclidean distance between the pixel's RGB values and each color in the color space
+        double[] distances = new double[colors.length];
+        for (int i = 0; i < colors.length; i++) {
+            distances[i] = Math.sqrt(Math.pow(red - colors[i].val[0], 2)
+                    + Math.pow(green - colors[i].val[1], 2)
+                    + Math.pow(blue - colors[i].val[2], 2));
+        }
+
+        // Find the index of the closest color in the color space
+        int closestColorIndex = 0;
+        double closestColorDistance = distances[0];
+        for (int i = 1; i < distances.length; i++) {
+            if (distances[i] < closestColorDistance) {
+                closestColorIndex = i;
+                closestColorDistance = distances[i];
+            }
+        }
+
+        // Get the name of the closest color
+        String closestColorName;
+        switch (closestColorIndex) {
+            case 0:
+                closestColorName = "Red";
+                break;
+            case 1:
+                closestColorName = "Yellow";
+                break;
+            case 2:
+                closestColorName = "Green";
+                break;
+            case 3:
+                closestColorName = "Blue";
+                break;
+            case 4:
+                closestColorName = "White";
+                break;
+            case 5:
+                closestColorName = "Orange";
+                break;
+            default:
+                closestColorName = "Unknown";
+                break;
+        }
+
+        return closestColorName;
+    }
+
     private int getPieceXA() {
         Intent intent = getIntent();
-        int pieceX = intent.getIntExtra("pieceXA", -1);
-        return pieceX;
+        return intent.getIntExtra("pieceXA", -1);
     }
 
     private int getPieceYA() {
         Intent intent = getIntent();
-        int pieceY = intent.getIntExtra("pieceYA", -1);
-        return pieceY;
+        return intent.getIntExtra("pieceYA", -1);
     }
 
     private int getPieceXB() {
         Intent intent = getIntent();
-        int pieceX = intent.getIntExtra("pieceXB", -1);
-        return pieceX;
+        return intent.getIntExtra("pieceXB", -1);
     }
 
     private int getPieceYB() {
         Intent intent = getIntent();
-        int pieceY = intent.getIntExtra("pieceYB", -1);
-        return pieceY;
+        return intent.getIntExtra("pieceYB", -1);
     }
 
     private String getPieceColor() {
         Intent intent = getIntent();
-        String color = intent.getStringExtra("Colour_From_Assembly");
+        String color = intent.getStringExtra("color");
         return color;
     }
 
