@@ -280,15 +280,27 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
         return rgba;
     }
 
-    private int getPieceX() {
+    private int getPieceXA() {
         Intent intent = getIntent();
-        int pieceX = intent.getIntExtra("pieceX", -1);
+        int pieceX = intent.getIntExtra("pieceXA", -1);
         return pieceX;
     }
 
-    private int getPieceY() {
+    private int getPieceYA() {
         Intent intent = getIntent();
-        int pieceY = intent.getIntExtra("pieceY", -1);
+        int pieceY = intent.getIntExtra("pieceYA", -1);
+        return pieceY;
+    }
+
+    private int getPieceXB() {
+        Intent intent = getIntent();
+        int pieceX = intent.getIntExtra("pieceXB", -1);
+        return pieceX;
+    }
+
+    private int getPieceYB() {
+        Intent intent = getIntent();
+        int pieceY = intent.getIntExtra("pieceYB", -1);
         return pieceY;
     }
 

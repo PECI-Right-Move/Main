@@ -3,6 +3,6 @@
 3    package="org.opencv" >
 4
 5    <uses-sdk android:minSdkVersion="24" />
-5-->C:\Users\catar\Desktop\UNI\PECI\Main\Sample\OpenCV4x\java\AndroidManifest.xml
+5-->C:\Users\ricardo\Desktop\Uni\2sem\PECI\Main\Sample\OpenCV4x\java\AndroidManifest.xml
 6
 7</manifest>

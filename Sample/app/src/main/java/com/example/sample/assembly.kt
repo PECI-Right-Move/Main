@@ -420,11 +420,13 @@ class assembly : AppCompatActivity() {
     fun switchActivity(xA: Int, yA: Int,xB: Int, yB: Int,  color: String , colorSelectedListener: ColorSelectedListener) {
         this.colorSelectedListener = colorSelectedListener
         val intent = Intent(this, colorVerification::class.java)
-        intent.putExtra("pieceX", xA)
-        intent.putExtra("pieceY", yA)
 
-        intent.putExtra("pieceX", xB)
-        intent.putExtra("pieceY", yB)
+
+        intent.putExtra("pieceXA", xA)
+        intent.putExtra("pieceYA", yA)
+
+        intent.putExtra("pieceXB", xB)
+        intent.putExtra("pieceYB", yB)
 
         Log.e("MyApp", "cor e 0$xA")
         Log.e("MyApp", "cor e 0$yA")
