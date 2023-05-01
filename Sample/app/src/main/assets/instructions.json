@@ -23,8 +23,8 @@
         "idPiece":"3011W",
         "idStep": "d12345",
         "color":"white",
-        "coordinates": {"x":6, "y":2},
-        "coordinatesA": {"x":9, "y":3}}
+        "coordinatesA": {"x":6, "y":2},
+        "coordinatesB": {"x":9, "y":3}}
     ]},
   { "assembly":"23456",
     "steps":[

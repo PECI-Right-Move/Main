@@ -1,6 +1,7 @@
 package com.example.sample
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
@@ -27,8 +28,12 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import java.io.OutputStream
 import java.sql.Time
 import java.util.*
 import java.util.concurrent.CountDownLatch
@@ -124,6 +129,27 @@ class assembly : AppCompatActivity() {
         }
     }
 
+    private fun addInstructionToJson(instruction: Instruction) {
+        try {
+            // Read the existing JSON file into instructionsList
+            val input: InputStream = assets.open("instructions.json")
+            val json = input.bufferedReader().use { it.readText() }
+            instructionsList.addAll(Gson().fromJson(json, Array<Instruction>::class.java).toList())
+
+            // Add the new instruction to instructionsList
+            instructionsList.add(instruction)
+
+            // Write the updated instructionsList back to the JSON file
+            val output: OutputStream = openFileOutput("instructions.json", Context.MODE_APPEND)
+            val jsonToUpdate = Gson().toJson(instructionsList)
+            output.write(jsonToUpdate.toByteArray())
+            output.close()
+
+        } catch (e: IOException) {
+            // Handle IO exception
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -166,7 +192,6 @@ class assembly : AppCompatActivity() {
             makeRequest()
         }
     }
-
 
     private fun makeRequest(){
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA),
@@ -213,6 +238,11 @@ class assembly : AppCompatActivity() {
                             "${qrData.piece2}",
                             "${qrData.piece3}",
                             "${qrData.piece4}")
+                        // Read the instructions from the AssemblyData object
+                        val instructions = qrData.instructions
+
+
+                        addInstructionToJson(instructions)
 
                         val matchingAssembly = instructionsList.find { it.assembly == codeAssembly }
 
