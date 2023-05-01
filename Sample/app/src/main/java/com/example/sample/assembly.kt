@@ -129,28 +129,6 @@ class assembly : AppCompatActivity() {
         }
     }
 
-    private fun addInstructionToJson(instruction: Instruction) {
-        try {
-            // Read the existing JSON file into instructionsList
-            val input: InputStream = assets.open("instructions.json")
-            val json = input.bufferedReader().use { it.readText() }
-            instructionsList.addAll(Gson().fromJson(json, Array<Instruction>::class.java).toList())
-
-            // Add the new instruction to instructionsList
-            instructionsList.add(instruction)
-
-            // Write the updated instructionsList back to the JSON file
-            val output: OutputStream = openFileOutput("instructions.json", Context.MODE_PRIVATE)
-            val jsonToUpdate = Gson().toJson(instructionsList)
-            output.write(jsonToUpdate.toByteArray())
-            output.close()
-
-        } catch (e: IOException) {
-            // Handle IO exception
-        }
-    }
-
-
     override fun onResume() {
         super.onResume()
         if (scanning) {
@@ -240,9 +218,8 @@ class assembly : AppCompatActivity() {
                             "${qrData.piece4}")
                         // Read the instructions from the AssemblyData object
                         val instructions = qrData.instructions
-
-
-                        //addInstructionToJson(instructions)
+                        instructionsList.add(instructions)
+                     
 
                         val matchingAssembly = instructionsList.find { it.assembly == codeAssembly }
 
