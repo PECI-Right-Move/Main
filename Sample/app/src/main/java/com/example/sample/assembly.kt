@@ -140,7 +140,7 @@ class assembly : AppCompatActivity() {
             instructionsList.add(instruction)
 
             // Write the updated instructionsList back to the JSON file
-            val output: OutputStream = openFileOutput("instructions.json", Context.MODE_APPEND)
+            val output: OutputStream = openFileOutput("instructions.json", Context.MODE_PRIVATE)
             val jsonToUpdate = Gson().toJson(instructionsList)
             output.write(jsonToUpdate.toByteArray())
             output.close()
@@ -242,7 +242,7 @@ class assembly : AppCompatActivity() {
                         val instructions = qrData.instructions
 
 
-                        addInstructionToJson(instructions)
+                        //addInstructionToJson(instructions)
 
                         val matchingAssembly = instructionsList.find { it.assembly == codeAssembly }
 

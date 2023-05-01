@@ -63,6 +63,10 @@ public class Placa {
             Tuple eq= lineEquation(leftmost.get(i),rightmost.get(i));
 
             List<Integer> arr = getBestFitIndexes(eq,sortedCircles);
+            for( int l=0;l<arr.size(); l++)
+            {
+                sortedCircles.remove(arr.get(l));
+            }
             List<Point> result = new ArrayList<>();
             for (int j : arr) {
                 result.add(sortedCircles.get(j));
@@ -120,7 +124,7 @@ public class Placa {
     }
 
     public static List<Point> eightleftmostCircles(List<Point> circles) {
-        int margin = 20;
+        int margin = 5;
         List<Point> lista = new ArrayList<>();
         circles.sort(Comparator.comparingDouble(Point::getX));
         int n = circles.size();
@@ -136,7 +140,7 @@ public class Placa {
                 lista.add(0, circles.get(i));
                 i += 1;
             } catch (IndexOutOfBoundsException e) {
-                margin += 10;
+                margin += 5;
                 System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                 lista = eightleftmostCircles(circles);
             }
@@ -146,7 +150,7 @@ public class Placa {
 
 
     public static List<Point> eigthRightmostCircle(List<Point> circles) {
-        int margin = 20;
+        int margin = 5;
         List<Point> lista = new ArrayList<>();
         circles.sort(Comparator.comparingDouble(Point::getX));
         int n = circles.size();
@@ -163,7 +167,7 @@ public class Placa {
                 i -= 1;
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
-                margin += 10;
+                margin += 5;
                 lista = eigthRightmostCircle(circles);
             }
         }

@@ -211,8 +211,10 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                     }
                 }
 
-                if( gotCord) {
+                if( !gotCord) {
+
                     for (int i = 0; i < 16; i++) {
+
                         Imgproc.circle(rgba, new Point(matrix[i][0].x, matrix[i][0].y), Math.round(finalRadii.get(0)), new Scalar(0, 255, 255), 2);
                         Imgproc.circle(rgba, new Point(matrix[i][1].x, matrix[i][1].y), Math.round(finalRadii.get(0)), new Scalar(255, 0, 255), 2);
                         Imgproc.circle(rgba, new Point(matrix[i][2].x, matrix[i][2].y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 0), 2);
@@ -221,6 +223,29 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                         Imgproc.circle(rgba, new Point(matrix[i][5].x, matrix[i][5].y), Math.round(finalRadii.get(0)), new Scalar(0, 0, 0), 2);
                         Imgproc.circle(rgba, new Point(matrix[i][6].x, matrix[i][6].y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 255), 2);
                     }
+                    /*
+                    int k=0;
+                    int l=0;
+                    int  m =0;
+                    for (int i=0; i<placa.leftmost.size(); i++){
+
+                        Imgproc.circle(rgba, new Point(placa.leftmost.get(i).x, placa.leftmost.get(i).y), Math.round(finalRadii.get(0)), new Scalar(k, l, m), 2);
+                        k=k+30;
+                        l=l+30;
+                        m=m+30;
+                    }
+                    m=0;
+                    l=0;
+                    k=0;
+                    for (int i=0; i<placa.rightmost.size(); i++){
+                        Imgproc.circle(rgba, new Point(placa.rightmost.get(i).x, placa.rightmost.get(i).y), Math.round(finalRadii.get(0)), new Scalar(m, l, k), 2);
+                        k=k+30;
+                        l=l+30;
+                        m=m+30;
+                    }
+
+
+                     */
                 }
 
 
@@ -341,7 +366,7 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
 
     private String getPieceColor() {
         Intent intent = getIntent();
-        String color = intent.getStringExtra("color");
+        String color = intent.getStringExtra("Colour_From_Assembly");
         return color;
     }
 
