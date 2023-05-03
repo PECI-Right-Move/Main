@@ -6,5 +6,6 @@ data class AssemblyData(
     val piece2: String,
     val piece3: String,
     val piece4: String,
-    val name : String
+    val name : String,
+    val instructions: Instruction
 )

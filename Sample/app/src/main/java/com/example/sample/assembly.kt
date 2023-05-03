@@ -1,6 +1,7 @@
 package com.example.sample
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
@@ -27,8 +28,12 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import java.io.OutputStream
 import java.sql.Time
 import java.util.*
 import java.util.concurrent.CountDownLatch
@@ -124,7 +129,6 @@ class assembly : AppCompatActivity() {
         }
     }
 
-
     override fun onResume() {
         super.onResume()
         if (scanning) {
@@ -166,7 +170,6 @@ class assembly : AppCompatActivity() {
             makeRequest()
         }
     }
-
 
     private fun makeRequest(){
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA),
@@ -213,11 +216,15 @@ class assembly : AppCompatActivity() {
                             "${qrData.piece2}",
                             "${qrData.piece3}",
                             "${qrData.piece4}")
+                        // Read the instructions from the AssemblyData object
+                        val instructions = qrData.instructions
+                        instructionsList.add(instructions)
+                     
 
                         val matchingAssembly = instructionsList.find { it.assembly == codeAssembly }
 
                         val stepsWithCoords = matchingAssembly?.steps?.map { step ->
-                            "(${step.coordinates.x}, ${step.coordinates.y})"
+                            "(${step.coordinatesA.x}, ${step.coordinatesA.y})"
                         } ?: emptyList()
 
                         val piecesWithCoords = piecesIds.mapIndexed { index, pieceId ->
@@ -381,7 +388,10 @@ class assembly : AppCompatActivity() {
         if (instruction != null) {
             Toast.makeText(this@assembly, "Verificated ${instruction.assembly}", Toast.LENGTH_SHORT).show()
             Log.e("MYAPP", "Before")
-            switchActivity(instruction.steps[index].coordinates.x, instruction.steps[index].coordinates.y, instruction.steps[index].color,
+
+
+            switchActivity(instruction.steps[index].coordinatesA.x, instruction.steps[index].coordinatesA.y,instruction.steps[index].coordinatesB.x,instruction.steps[index].coordinatesB.y, instruction.steps[index].color,
+
                 object : ColorSelectedListener {
                     override fun onColorSelected(color: String) {
                         Log.e("MYAPP", "After")
@@ -414,14 +424,22 @@ class assembly : AppCompatActivity() {
         }
     }
 
-    fun switchActivity(x: Int, y: Int, color: String , colorSelectedListener: ColorSelectedListener) {
+    fun switchActivity(xA: Int, yA: Int,xB: Int, yB: Int,  color: String , colorSelectedListener: ColorSelectedListener) {
         this.colorSelectedListener = colorSelectedListener
         val intent = Intent(this, colorVerification::class.java)
-        intent.putExtra("pieceX", x)
-        intent.putExtra("pieceY", y)
 
-        Log.e("MyApp", "cor e 0$x")
-        Log.e("MyApp", "cor e 0$y")
+
+        intent.putExtra("pieceXA", xA)
+        intent.putExtra("pieceYA", yA)
+
+        intent.putExtra("pieceXB", xB)
+        intent.putExtra("pieceYB", yB)
+
+        Log.e("MyApp", "cor e 0$xA")
+        Log.e("MyApp", "cor e 0$yA")
+
+        Log.e("MyApp", "cor e 0$xB")
+        Log.e("MyApp", "cor e 0$yB")
         intent.putExtra("Colour_From_Assembly", color)
         Log.i("MYAPP", "Before")
         colorVerificationLauncher.launch(intent)
