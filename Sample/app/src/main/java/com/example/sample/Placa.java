@@ -26,7 +26,7 @@ public class Placa {
     public  List<Pino> lista;
     public List<Point> leftmost ;
     public List<Point> rightmost ;
-
+    public ArrayList <Tuple> eq_lines = new ArrayList<>();
 
 
     public Placa ( List<org.opencv.core.Point> pontos){
@@ -55,13 +55,15 @@ public class Placa {
         }
 
          */
+
+
         for ( int i =0; i< rightmost.size(); i++)
         {
             Collections.sort(leftmost, Comparator.comparingDouble(Point::getY));
             Collections.sort(rightmost, Comparator.comparingDouble(Point::getY));
 
             Tuple eq= lineEquation(leftmost.get(i),rightmost.get(i));
-
+            eq_lines.add(eq);
             List<Integer> arr = getBestFitIndexes(eq,sortedCircles);
             for( int l=0;l<arr.size(); l++)
             {
@@ -69,7 +71,8 @@ public class Placa {
             }
             List<Point> result = new ArrayList<>();
             for (int j : arr) {
-                result.add(sortedCircles.get(j));
+                  result.add(sortedCircles.get(j));
+
             }
             Collections.sort(result, Comparator.comparingDouble(Point::getX));
 
@@ -123,122 +126,127 @@ public class Placa {
         }
     }
 
-    public static List<Point> eightleftmostCircles(List<Point> circles) {
-        int margin = 5;
-        List<Point> lista = new ArrayList<>();
-        circles.sort(Comparator.comparingDouble(Point::getX));
-        int n = circles.size();
-        for (int i = 0; i < 8; i++) {
-            lista.add(circles.get(i));
-        }
-        int i = 8;
-        while (checkLine(lista, margin) != 0) {
-            try {
-                int indexToRemove = checkLine(lista, margin);
-                lista.remove(indexToRemove);
-                circles.sort(Comparator.comparingDouble(Point::getX));
-                lista.add(0, circles.get(i));
-                i += 1;
-            } catch (IndexOutOfBoundsException e) {
-                margin += 5;
-                System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-                lista = eightleftmostCircles(circles);
-            }
-        }
-        return lista;
-    }
-
-
-    public static List<Point> eigthRightmostCircle(List<Point> circles) {
-        int margin = 5;
-        List<Point> lista = new ArrayList<>();
-        circles.sort(Comparator.comparingDouble(Point::getX));
-        int n = circles.size();
-        for (int i = n - 8; i < n; i++) {
-            lista.add(circles.get(i));
-        }
-        int i = n-9;
-        while (checkLine(lista, margin) != 0) {
-            try {
-                int indexToRemove = checkLine(lista, margin);
-                lista.remove(indexToRemove);
-                circles.sort(Comparator.comparingDouble(Point::getX));
+        public static List<Point> eightleftmostCircles(List<Point> circles) {
+            int margin = 5;
+            List<Point> lista = new ArrayList<>();
+            circles.sort(Comparator.comparingDouble(Point::getX));
+            int n = circles.size();
+            for (int i = 0; i < 8; i++) {
                 lista.add(circles.get(i));
-                i -= 1;
-            } catch (IndexOutOfBoundsException e) {
-                System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
-                margin += 5;
-                lista = eigthRightmostCircle(circles);
             }
+            int i = 8;
+            while (checkLine(lista, margin) != 0) {
+                try {
+                    int indexToRemove = checkLine(lista, margin);
+                    lista.remove(indexToRemove);
+                    circles.sort(Comparator.comparingDouble(Point::getX));
+                    lista.add(0, circles.get(i));
+                    i += 1;
+                } catch (IndexOutOfBoundsException e) {
+                    margin += 5;
+                    System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                    lista = eightleftmostCircles(circles);
+                }
+            }
+            return lista;
         }
-        return lista;
-    }
-    public static int checkLine(List<Point> circles, int margin) {
-        if (circles.size() < 3) {
-            return 0;
+
+
+        public static List<Point> eigthRightmostCircle(List<Point> circles) {
+            int margin = 5;
+            List<Point> lista = new ArrayList<>();
+            circles.sort(Comparator.comparingDouble(Point::getX));
+            int n = circles.size();
+            for (int i = n - 8; i < n; i++) {
+                lista.add(circles.get(i));
+            }
+            int i = n-9;
+            while (checkLine(lista, margin) != 0) {
+                try {
+                    int indexToRemove = checkLine(lista, margin);
+                    lista.remove(indexToRemove);
+                    circles.sort(Comparator.comparingDouble(Point::getX));
+                    lista.add(circles.get(i));
+                    i -= 1;
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+                    margin += 5;
+                    lista = eigthRightmostCircle(circles);
+                }
+            }
+            return lista;
         }
-        double x1 = circles.get(0).getX();
-        double y1 = circles.get(0).getY();
-        double x2 = circles.get(1).getX();
-        double slope;
-        double y2 = circles.get(1).getY();
-        if( x1-x2 ==0) { slope= 0;} else if ( y1==y2 ) {
-            slope= 1;
-        }
-        else{
-            slope = (y2 - y1) / (double) (x2 - x1);
-        }
-        for (int i = 2; i < circles.size(); i++) {
-            double x = circles.get(i).getX();
-            double y = circles.get(i).getY();
-            if (Math.abs(y - y1 - slope * (x - x1)) > margin) {
+        public static int checkLine(List<Point> circles, int margin) {
+            if (circles.size() < 3) {
                 return 0;
             }
+            double x1 = circles.get(0).getX();
+            double y1 = circles.get(0).getY();
+            double x2 = circles.get(1).getX();
+            double slope;
+            double y2 = circles.get(1).getY();
+            if( x1-x2 ==0) { slope= 0;} else if ( y1==y2 ) {
+                slope= 1;
+            }
+            else{
+                slope = (y2 - y1) / (double) (x2 - x1);
+            }
+            for (int i = 2; i < circles.size(); i++) {
+                double x = circles.get(i).getX();
+                double y = circles.get(i).getY();
+                if (Math.abs(y - y1 - slope * (x - x1)) > margin) {
+                    return 0;
+                }
+            }
+            return 1;
         }
-        return 1;
-    }
 
 
-    public static List<Integer> getBestFitIndexes(Tuple lineEq, List<Point> points) {
-        double a = lineEq.x;
-        double b = lineEq.y;
-        List<Tuple> distances = new ArrayList<>();
-        for (int i = 0; i < points.size(); i++) {
-            Point point = points.get(i);
-            double x = point.x;
-            double y = point.y;
-            double dist = Math.abs(a * x - y + b) / Math.sqrt(a * a + 1);
-            distances.add(new Tuple(i, dist));
+        public static List<Integer> getBestFitIndexes(Tuple lineEq, List<Point> points) {
+            double a = lineEq.x;
+            double b = lineEq.y;
+            List<Tuple> distances = new ArrayList<>();
+            for (int i = 0; i < points.size(); i++) {
+                Point point = points.get(i);
+                double x = point.x;
+                double y = point.y;
+                double dist = Math.abs(a * x - y + b) / Math.sqrt(a * a + 1);
+                distances.add(new Tuple(i, dist));
+            }
+            distances.sort(Comparator.comparingDouble(Tuple::getY));
+            List<Integer> bestFitIndexes = new ArrayList<>();
+            for (int i = 0; i < 16; i++) {
+                Tuple tuple = distances.get(i);
+                bestFitIndexes.add((int) tuple.x);
+            }
+            return bestFitIndexes;
         }
-        distances.sort(Comparator.comparingDouble(Tuple::getY));
-        List<Integer> bestFitIndexes = new ArrayList<>();
-        for (int i = 0; i < 16; i++) {
-            Tuple tuple = distances.get(i);
-            bestFitIndexes.add((int) tuple.x);
-        }
-        return bestFitIndexes;
-    }
 
-    public static Tuple lineEquation(Point point1, Point  point2) {
-        double x1 = point1.x;
-        double y1 = point1.y;
-        double x2 = point2.x;
-        double y2 = point2.y;
-        double slope;
-        if (x1 == x2) {
-            slope = 0;
-        } else if (y1 == y2) {
-            slope = 1;
-        } else {
-            slope = (y2 - y1) / (x2 - x1);
+        public static Tuple lineEquation(Point point1, Point  point2) {
+            double x1 = point1.x;
+            double y1 = point1.y;
+            double x2 = point2.x;
+            double y2 = point2.y;
+            double slope;
+            if (x1 == x2) {
+                slope = 1;
+            } else if (y1 == y2) {
+                slope = 0;
+            } else {
+                slope = (y2 - y1) / (x2 - x1);
+            }
+            double yIntercept = y1 - slope * x1;
+            return new Tuple(slope, yIntercept);
         }
-        double yIntercept = y1 - slope * x1;
-        return new Tuple(slope, yIntercept);
-    }
 
     public Pino[][] getMatrix() {
         return matrix;
     }
+
+    public ArrayList<Tuple> getEq_lines() {
+        return eq_lines;
+    }
+
 
     public static void drawLine(Mat image, double a, double b) {
         // calculate the x and y coordinates of two points on the line

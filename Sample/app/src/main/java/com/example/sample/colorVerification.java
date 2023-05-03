@@ -222,8 +222,15 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                         Imgproc.circle(rgba, new Point(matrix[i][4].x, matrix[i][4].y), Math.round(finalRadii.get(0)), new Scalar(255, 0, 0), 2);
                         Imgproc.circle(rgba, new Point(matrix[i][5].x, matrix[i][5].y), Math.round(finalRadii.get(0)), new Scalar(0, 0, 0), 2);
                         Imgproc.circle(rgba, new Point(matrix[i][6].x, matrix[i][6].y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 255), 2);
+
+
+
                     }
                     /*
+                    for  ( Placa.Tuple eq:placa.getEq_lines() ) {
+                        drawLine(rgba,eq.getX(),eq.getY());
+                    }
+
                     int k=0;
                     int l=0;
                     int  m =0;
@@ -245,6 +252,8 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                     }
 
 
+
+                    
                      */
                 }
 
@@ -342,6 +351,15 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
         }
 
         return closestColorName;
+    }
+
+    public static void drawLine(Mat img, double slope, double yIntercept) {
+        // Define the starting and ending points of the line
+        Point startPoint = new Point(0, yIntercept);
+        Point endPoint = new Point(img.cols(), slope * img.cols() + yIntercept);
+
+        // Draw the line on the image
+        Imgproc.line(img, startPoint, endPoint, new Scalar(0, 0, 255), 2);
     }
 
     private int getPieceXA() {
