@@ -9,24 +9,39 @@
 
     <com.budiyev.android.codescanner.CodeScannerView
         android:id="@+id/scanner_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         app:autoFocusButtonColor="@android:color/black"
         app:autoFocusButtonVisible="true"
         app:flashButtonColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@id/qr_info_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/qr_info_layout"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:maskColor="#612196F3">
+        app:maskColor="#612196F3"
+        app:frameSize="0.2">
 
+        <TextView
+            android:id="@+id/tv_textView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/black"
+            android:visibility="visible"
+            tools:visibility="visible" />
     </com.budiyev.android.codescanner.CodeScannerView>
 
     <RelativeLayout
         android:id="@+id/qr_info_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:background="#D7C4C6D5"
-        app:layout_constraintBottom_toBottomOf="parent" >
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/scanner_view"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/qr_info_title"
@@ -34,9 +49,6 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/iv_assembly_image"
             android:paddingStart="16dp"
-            android:paddingTop="5dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="40dp"
             android:scaleType="centerInside"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
@@ -45,23 +57,10 @@
             android:id="@+id/qr_info_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/qr_info_title"
+            android:layout_marginRight="0dp"
             android:layout_toLeftOf="@+id/iv_assembly_image"
             android:paddingStart="16dp"
-            android:paddingTop="30dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="16dp"
-            android:scaleType="centerInside"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <TextView
-            android:id="@+id/jsonInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/iv_assembly_image"
-            android:paddingStart="16dp"
-            android:paddingTop="30dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="16dp"
             android:scaleType="centerInside"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -69,24 +68,14 @@
             android:id="@+id/iv_assembly_image"
             android:layout_width="200dp"
             android:layout_height="200dp"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="211dp"
             android:background="@android:color/transparent"
             android:scaleType="centerInside" />
 
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/tv_textView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:background="@android:color/transparent"
-        android:textColor="@android:color/black"
-        android:visibility="visible"
-        tools:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

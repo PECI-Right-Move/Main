@@ -62,8 +62,6 @@ class assembly : AppCompatActivity() {
 
     private lateinit var qrInfoDetails: TextView
 
-    private lateinit var jsonInfo : TextView
-
     private val instructionsList = mutableListOf<Instruction>()
 
     private val piecesList = mutableListOf<QRCodeData>()
@@ -94,8 +92,6 @@ class assembly : AppCompatActivity() {
         qrInfoLayout = findViewById(R.id.qr_info_layout)
         qrInfoTitle = findViewById(R.id.qr_info_title)
         qrInfoDetails = findViewById(R.id.qr_info_details)
-
-        jsonInfo = findViewById(R.id.jsonInfo)
 
         codeScanner = CodeScanner(this, scanner_view)
 
