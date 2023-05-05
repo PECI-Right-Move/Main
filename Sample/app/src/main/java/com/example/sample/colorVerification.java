@@ -303,9 +303,9 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 new Scalar(0, 255, 0), // Green
                 new Scalar(0, 0, 255), // Blue
                 new Scalar(255, 255, 255), // White
-                new Scalar(128, 0, 128), // Purple
-                new Scalar(128, 128, 128), // Grey
-                new Scalar(165, 42, 42), // Brown
+                new Scalar(148, 100, 186), // Purple
+                new Scalar(124, 130, 138), // Grey
+                new Scalar(120, 41, 2), // Brown
         };
 
         // Calculate the Euclidean distance between the pixel's RGB values and each color in the color space
