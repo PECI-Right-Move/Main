@@ -303,10 +303,9 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 new Scalar(0, 255, 0), // Green
                 new Scalar(0, 0, 255), // Blue
                 new Scalar(255, 255, 255), // White
-                new Scalar(128, 0, 128), // Purple
-                new Scalar(128, 128, 128), // Grey
-                new Scalar(165, 42, 42), // Brown
+                new Scalar(255, 128, 0), // Orange
         };
+
 
         // Calculate the Euclidean distance between the pixel's RGB values and each color in the color space
         double[] distances = new double[colors.length];
@@ -344,14 +343,8 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
             case 4:
                 closestColorName = "White";
                 break;
-            case 6:
-                closestColorName = "Purple";
-                break;
-            case 7:
-                closestColorName = "Grey";
-                break;
-            case 8:
-                closestColorName = "Brown";
+            case 5:
+                closestColorName = "Orange";
                 break;
             default:
                 closestColorName = "Unknown";
