@@ -147,10 +147,6 @@ public class Placa {
             }
         }
 
-
-
-
-
         return lista;
     }
 

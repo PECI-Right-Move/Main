@@ -70,10 +70,6 @@ class assembly : AppCompatActivity() {
     private lateinit var piecesIds: Array<String>
 
 
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -94,10 +90,7 @@ class assembly : AppCompatActivity() {
 
         setupPermissions()
         readJson()
-        Log.i("MyAPP", "antes da f")
         firstcodeScanner()
-        Log.i("MyAPP", "antes epois da f")
-
 
         // Set scanning to true when the activity starts
         scanning = true
@@ -192,6 +185,7 @@ class assembly : AppCompatActivity() {
         }
     }
 
+    //to read all the information of the Assembly QRcode
     private fun firstcodeScanner() {
 
         codeScanner.apply {
@@ -247,7 +241,6 @@ class assembly : AppCompatActivity() {
 
                         currentPiece = -1
 
-                        Log.i("MYAPP", "Vai entrar")
                         secondcodeScanner()
                         scanning = false
                     } catch (e: Exception) {
@@ -273,9 +266,9 @@ class assembly : AppCompatActivity() {
         }
     }
 
+    //to read all the information of the Pieces QRcode
     private fun secondcodeScanner() {
         codeScanner.startPreview()
-        Log.e("MYAPP", "Entrou Second")
 
         codeScanner.apply {
             camera = CodeScanner.CAMERA_BACK
@@ -383,7 +376,7 @@ class assembly : AppCompatActivity() {
             switchActivity(instruction.steps[index].coordinates.x, instruction.steps[index].coordinates.y,
                 object : ColorSelectedListener {
                     override fun onColorSelected(color: String) {
-                        Log.e("MYAPP", "After")
+                        //Verifys color colected if invalid decrement piece to repeat process
                         if (instruction.assembly == assembly && instruction.steps[index].idPiece == id && instruction.steps[index].color.uppercase() == color.uppercase()) {
                             Log.e("MYAPP", color)
                             val resourceId = resources.getIdentifier(instruction.steps[index].idStep, "drawable", packageName)
@@ -397,7 +390,6 @@ class assembly : AppCompatActivity() {
                     }
                 }
             )
-            Log.e("MYAPP", "After Switch")
         }
     }
 
@@ -417,9 +409,7 @@ class assembly : AppCompatActivity() {
         val intent = Intent(this, colorVerification::class.java)
         intent.putExtra("pieceX", x)
         intent.putExtra("pieceY", y)
-        Log.i("MYAPP", "Before")
         colorVerificationLauncher.launch(intent)
-        Log.i("MYAPP", "After")
 
     }
 

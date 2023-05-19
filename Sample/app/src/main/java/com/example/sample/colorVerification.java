@@ -174,13 +174,13 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 dictCantos.put(id, cornerList);
             }
 
-// Get the coordinates of the corners you want to print
+            // Get the coordinates of the corners you want to print
             double[] corner1 = dictCantos.get(1).get(2);
             double[] corner2 = dictCantos.get(2).get(3);
             double[] corner3 = dictCantos.get(3).get(0);
             double[] corner4 = dictCantos.get(4).get(1);
 
-// Print the coordinates
+            // Print the coordinates
             System.out.println(" marker 1: (" + corner1[0] + ", " + corner1[1] + ")");
             System.out.println("marker 2: (" + corner2[0] + ", " + corner2[1] + ")");
             System.out.println("marker 3: (" + corner3[0] + ", " + corner3[1] + ")");
