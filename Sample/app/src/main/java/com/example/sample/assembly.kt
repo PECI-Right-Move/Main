@@ -194,6 +194,7 @@ class assembly : AppCompatActivity() {
         }
     }
 
+    //Reads the QRCode of Assemblys
     private fun firstcodeScanner() {
 
         codeScanner.apply {
@@ -248,12 +249,11 @@ class assembly : AppCompatActivity() {
                         tv_textView.text = qrData.name.toString()
                         val resourceId = resources.getIdentifier(qrData.name, "drawable", packageName)
                         image_view.setImageResource(resourceId)
-                        image_view.visibility = View.VISIBLE //
+                        image_view.visibility = View.VISIBLE
                         tv_textView.visibility = View.GONE
 
                         currentPiece = -1
 
-                        Log.i("MYAPP", "Vai entrar")
                         secondcodeScanner()
                         scanning = false
                     } catch (e: Exception) {
@@ -279,6 +279,7 @@ class assembly : AppCompatActivity() {
         }
     }
 
+    //Reads QRcodes of pieces
     private fun secondcodeScanner() {
         Log.e("MYAPP", "Entrou Second")
 
@@ -293,6 +294,7 @@ class assembly : AppCompatActivity() {
 
             codeScanner.startPreview()
 
+            //Waits so We have time to move camera from the 1st QR to the next
             Timer().schedule(500){
 
             codeScanner.decodeCallback = DecodeCallback { result ->
@@ -311,14 +313,13 @@ class assembly : AppCompatActivity() {
                             ).show()
                             currentPiece++
 
-                            Log.d("MYAPP", "Entrou")
                             verificationFirst(
                                 secondQRId,
                                 currentPiece,
                                 codeAssembly
                             )
 
-                            Log.d("MYAPP", "Saiu e tem " + color)
+                            Log.d("MYAPP", "Left with " + color)
 
                             if (currentPiece == 3) {
 
@@ -387,14 +388,12 @@ class assembly : AppCompatActivity() {
         val instruction = instructionsList.find { it.assembly == assembly }
         if (instruction != null) {
             Toast.makeText(this@assembly, "Verificated ${instruction.assembly}", Toast.LENGTH_SHORT).show()
-            Log.e("MYAPP", "Before")
-
 
             switchActivity(instruction.steps[index].coordinatesA.x, instruction.steps[index].coordinatesA.y,instruction.steps[index].coordinatesB.x,instruction.steps[index].coordinatesB.y, instruction.steps[index].color,
 
                 object : ColorSelectedListener {
                     override fun onColorSelected(color: String) {
-                        Log.e("MYAPP", "After")
+                        //Enters if color is valid if not decrement from currentPiece to repeat process
                         if (instruction.assembly == assembly && instruction.steps[index].idPiece == id && instruction.steps[index].color.uppercase() == color.uppercase()) {
                             Log.e("MYAPP", color)
                             val resourceId = resources.getIdentifier(instruction.steps[index].idStep, "drawable", packageName)
@@ -408,7 +407,7 @@ class assembly : AppCompatActivity() {
                     }
                 }
             )
-            Log.e("MYAPP", "After Switch")
+
         }
     }
 

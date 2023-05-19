@@ -10,6 +10,7 @@ import org.opencv.core.CvType;
 import org.opencv.core.MatOfDouble;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.*;
 import org.opencv.core.Mat;
@@ -133,7 +134,27 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
         Mat rgba =inputFrame.rgba();
         // Apply Hough transform to detect circles
         Mat circles = new Mat();
-        Imgproc.HoughCircles(img, circles, Imgproc.HOUGH_GRADIENT, 1, 20, 30, 30, 15, 40);
+        //Imgproc.HoughCircles(img, circles, Imgproc.HOUGH_GRADIENT, 1, 20, 30, 30, 20, 40);
+        //Imgproc.GaussianBlur(img, img, new Size(5, 5), 0);
+        Imgproc.medianBlur(img, img, 3);
+        Imgproc.HoughCircles(img, circles, Imgproc.HOUGH_GRADIENT, 1, 15, 40, 35, 10, 30);
+
+
+        /*
+        //Dysplay of all Circles gotten by HoughtCircles
+        for (int i = 0; i < circles.cols(); i++) {
+            double[] circle = circles.get(0, i);
+            Point center = new Point(Math.round(circle[0]), Math.round(circle[1]));
+            // circle center
+
+            String color = guessColor(rgba, center);
+            System.out.println(circles.total() + color);
+            //if(!color.equals("Green"))
+            //    break;
+            // circle outline
+            int radius = (int) Math.round(circle[2]);
+            Imgproc.circle(rgba, center, radius, new Scalar(255, 0, 255), 3, 8, 0);
+        }*/
         if (circles.total()!=0) {
 
             // Convert the (x, y) coordinates and radius of the circles to integers
@@ -167,6 +188,7 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                     finalRadii.add(circleRadii[i]);
                 }
             }
+            System.out.println(finalCenters.size());
             if (finalCenters.size()== 128) {
 
 
@@ -174,14 +196,15 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
 
                 Pino[][] matrix = placa.getMatrix();
 
-                //get pines coord
+                //get coordinates of the piece pines
                 int pinoXA = getPieceXA();
                 int pinoYA = getPieceYA();
                 int pinoXB = getPieceXB();
                 int pinoYB = getPieceYB();
                 boolean gotCord = true;
                 String getColor = "noColor";
-                //if didnt came from another intent so with defautlt value i put a random pin
+
+                //if didn't came from another intent so with defautlt value i put a random pin
                 if (pinoXA == -1 && pinoYA == -1) {
                     pinoYA = 0;
                     pinoXA = 0;
@@ -191,7 +214,6 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 }
                 else
                     getColor = getPieceColor();
-
 
                 Point pinoA = new Point(matrix[pinoXA][pinoYA].x, matrix[pinoXA][pinoYA].y);
                 Point pinoB = new Point(matrix[pinoXB][pinoYB].x, matrix[pinoXB][pinoYB].y);
@@ -210,7 +232,6 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                             }
                     }
                 }
-
                 if( !gotCord) {
 
                     for (int i = 0; i < 16; i++) {
@@ -226,7 +247,7 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
 
 
                     }
-                    /*
+/*
                     for  ( Placa.Tuple eq:placa.getEq_lines() ) {
                         drawLine(rgba,eq.getX(),eq.getY());
                     }
@@ -234,8 +255,8 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                     int k=0;
                     int l=0;
                     int  m =0;
+                    //Dysplays LEFT PINS
                     for (int i=0; i<placa.leftmost.size(); i++){
-
                         Imgproc.circle(rgba, new Point(placa.leftmost.get(i).x, placa.leftmost.get(i).y), Math.round(finalRadii.get(0)), new Scalar(k, l, m), 2);
                         k=k+30;
                         l=l+30;
@@ -244,25 +265,19 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                     m=0;
                     l=0;
                     k=0;
+                    //Dysplays RIGHT PINS
                     for (int i=0; i<placa.rightmost.size(); i++){
                         Imgproc.circle(rgba, new Point(placa.rightmost.get(i).x, placa.rightmost.get(i).y), Math.round(finalRadii.get(0)), new Scalar(m, l, k), 2);
                         k=k+30;
                         l=l+30;
                         m=m+30;
                     }
-
-
-
-                    
                      */
                 }
 
-
-
-                // Print the name of the closest color to the log
-
                 Log.e("MyApp", "The color is " + closestColorNamePineA);
 
+                //waits until the colors are both valid
                 if (gotCord && closestColorNamePineA.equalsIgnoreCase((getColor)) && closestColorNamePineB.equalsIgnoreCase((getColor))) {
                     setResultColor(closestColorNamePineA);
                 }
@@ -348,7 +363,6 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
                 closestColorName = "Unknown";
                 break;
         }
-
         return closestColorName;
     }
 

@@ -169,7 +169,6 @@ public class Placa {
                     lista.add(circles.get(i));
                     i -= 1;
                 } catch (IndexOutOfBoundsException e) {
-                    System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
                     margin += 5;
                     lista = eigthRightmostCircle(circles);
                 }
