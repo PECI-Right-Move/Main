@@ -133,7 +133,21 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
         Mat rgba =inputFrame.rgba();
         // Apply Hough transform to detect circles
         Mat circles = new Mat();
-        Imgproc.HoughCircles(img, circles, Imgproc.HOUGH_GRADIENT, 1, 20, 30, 30, 15, 40);
+        Imgproc.medianBlur(img, img, 3);
+        Imgproc.HoughCircles(img, circles, Imgproc.HOUGH_GRADIENT, 1, 4, 60, 10, 2, 10);
+        /*for (int i = 0; i < circles.cols(); i++) {
+            double[] circle = circles.get(0, i);
+            Point center = new Point(Math.round(circle[0]), Math.round(circle[1]));
+            // circle center
+
+            String color = guessColor(rgba, center);
+            System.out.println(circles.total() + color);
+            //if(!color.equals("Green"))
+            //    break;
+            // circle outline
+            int radius = (int) Math.round(circle[2]);
+            Imgproc.circle(rgba, center, radius, new Scalar(255, 0, 255), 1, 8, 0);
+        }*/
         if (circles.total()!=0) {
 
             // Convert the (x, y) coordinates and radius of the circles to integers
@@ -215,13 +229,13 @@ public class colorVerification extends CameraActivity implements CvCameraViewLis
 
                     for (int i = 0; i < 16; i++) {
 
-                        Imgproc.circle(rgba, new Point(matrix[i][0].x, matrix[i][0].y), Math.round(finalRadii.get(0)), new Scalar(0, 255, 255), 2);
-                        Imgproc.circle(rgba, new Point(matrix[i][1].x, matrix[i][1].y), Math.round(finalRadii.get(0)), new Scalar(255, 0, 255), 2);
-                        Imgproc.circle(rgba, new Point(matrix[i][2].x, matrix[i][2].y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 0), 2);
-                        Imgproc.circle(rgba, new Point(matrix[i][3].x, matrix[i][3].y), Math.round(finalRadii.get(0)), new Scalar(0, 0, 255), 2);
-                        Imgproc.circle(rgba, new Point(matrix[i][4].x, matrix[i][4].y), Math.round(finalRadii.get(0)), new Scalar(255, 0, 0), 2);
-                        Imgproc.circle(rgba, new Point(matrix[i][5].x, matrix[i][5].y), Math.round(finalRadii.get(0)), new Scalar(0, 0, 0), 2);
-                        Imgproc.circle(rgba, new Point(matrix[i][6].x, matrix[i][6].y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 255), 2);
+                        Imgproc.circle(rgba, new Point(matrix[i][0].x, matrix[i][0].y), Math.round(finalRadii.get(0)), new Scalar(0, 255, 255), 1);
+                        Imgproc.circle(rgba, new Point(matrix[i][1].x, matrix[i][1].y), Math.round(finalRadii.get(0)), new Scalar(255, 0, 255), 1);
+                        Imgproc.circle(rgba, new Point(matrix[i][2].x, matrix[i][2].y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 0), 1);
+                        Imgproc.circle(rgba, new Point(matrix[i][3].x, matrix[i][3].y), Math.round(finalRadii.get(0)), new Scalar(0, 0, 255), 1);
+                        Imgproc.circle(rgba, new Point(matrix[i][4].x, matrix[i][4].y), Math.round(finalRadii.get(0)), new Scalar(255, 0, 0), 1);
+                        Imgproc.circle(rgba, new Point(matrix[i][5].x, matrix[i][5].y), Math.round(finalRadii.get(0)), new Scalar(0, 0, 0), 1);
+                        Imgproc.circle(rgba, new Point(matrix[i][6].x, matrix[i][6].y), Math.round(finalRadii.get(0)), new Scalar(255, 255, 255), 1);
 
 
 

@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:maskColor="#612196F3"
-        app:frameSize="0.2">
+        app:frameSize="0.7">
 
         <TextView
             android:id="@+id/tv_textView"
