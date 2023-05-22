@@ -30,11 +30,13 @@ public class Placa {
 
 
     public Placa ( List<org.opencv.core.Point> pontos){
+        //oredering the points
         List<Point> sortedCircles = pontos.stream()
                 .sorted(Comparator.comparingDouble(point -> point.x))
                 .map(point -> new Point(point.x, point.y)) // create Circle objects from Point objects
                 .collect(Collectors.toList());
 
+        //Gets the 8 leftmost circles and 8 rightmost
         this.leftmost = eightleftmostCircles(sortedCircles);
         Collections.sort(leftmost, Comparator.comparingDouble(Point::getY));
 
@@ -59,11 +61,15 @@ public class Placa {
 
         for ( int i =0; i< rightmost.size(); i++)
         {
+            //Sorting them  by Y coordinate
             Collections.sort(leftmost, Comparator.comparingDouble(Point::getY));
             Collections.sort(rightmost, Comparator.comparingDouble(Point::getY));
 
+            // Line eq between the two points
             Tuple eq= lineEquation(leftmost.get(i),rightmost.get(i));
             eq_lines.add(eq);
+
+            //best fiting 16 points given the line equation
             List<Integer> arr = getBestFitIndexes(eq,sortedCircles);
             for( int l=0;l<arr.size(); l++)
             {
@@ -76,6 +82,7 @@ public class Placa {
             }
             Collections.sort(result, Comparator.comparingDouble(Point::getX));
 
+            //Placing the points in the matrix
             for (int j = 0; j < result.size(); j++) {
                 Point k= result.get(j);
                 boolean flag = false;
